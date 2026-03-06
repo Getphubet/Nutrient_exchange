@@ -67,41 +67,41 @@ app.get("/foods", async (req, res) => {
     res.json(foods);
 });
 
+// Route: เพิ่มข้อมูลอาหาร (Manual) ให้ตรงตาม Schema ของคุณ
 app.post("/add-food", async (req, res) => {
   try {
-    const { name, category, protein, fat, carbohydrate, calories } = req.body;
+    // 1. รับค่าจาก Body ตามชื่อใน Schema
+    const { name, category, protein, carbs, fat, calories } = req.body;
 
-    // 1. ตรวจสอบข้อมูลเบื้องต้น (Validation)
-    if (!name || !category) {
-      return res.status(400).json({ message: "กรุณาระบุชื่ออาหารและหมวดหมู่" });
+    // 2. ตรวจสอบข้อมูล (เนื่องจากใน Schema ตั้ง required: true ทุกตัว)
+    if (!name || !category || protein === undefined || carbs === undefined || fat === undefined || calories === undefined) {
+      return res.status(400).json({ 
+        message: "กรุณาระบุข้อมูลให้ครบทุกช่อง (name, category, protein, carbs, fat, calories)" 
+      });
     }
 
-    // 2. สร้าง Instance ใหม่จาก Model Food
+    // 3. สร้างข้อมูลใหม่โดยเรียงตาม Schema ในรูป
     const newFood = new Food({
       name,
       category,
-      protein: protein || 0,
-      fat: fat || 0,
-      carbohydrate: carbohydrate || 0,
-      calories: calories || 0
+      carbs,      // ใช้ชื่อ carbs ตามรูป
+      protein,    // มาก่อน carbs ในลำดับประกาศ แต่ Schema ในรูปเอา carbs ขึ้นก่อน (ไม่มีผลต่อการทำงาน แต่ทำให้ตรงกัน)
+      fat,
+      calories
     });
 
-    // 3. บันทึกลง MongoDB
+    // 4. บันทึก
     const savedFood = await newFood.save();
 
     res.status(201).json({
       success: true,
-      message: "เพิ่มข้อมูลอาหารเรียบร้อยแล้ว",
+      message: "บันทึกข้อมูลอาหารสำเร็จ",
       data: savedFood
     });
 
   } catch (error) {
     console.error("Add Food Error:", error);
-    // กรณีชื่อซ้ำ (ถ้าใน Model ตั้ง unique: true ไว้)
-    if (error.code === 11000) {
-      return res.status(400).json({ message: "มีชื่ออาหารนี้อยู่ในระบบแล้ว" });
-    }
-    res.status(500).json({ error: "ไม่สามารถเพิ่มข้อมูลได้" });
+    res.status(500).json({ error: "เกิดข้อผิดพลาดในการบันทึกข้อมูล" });
   }
 });
 

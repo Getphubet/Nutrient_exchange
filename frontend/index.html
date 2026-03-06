@@ -40,7 +40,7 @@
     <div id="result"></div>
 </div>
 
-<script>
+<script src="config.js">
     const backend_uri = typeof CONFIG !== 'undefined' ? CONFIG.BACKEND_URL : 'http://localhost:8000';
     // ดึงรายชื่ออาหารมาใส่ใน datalist ทันทีที่โหลดหน้าเว็บ
     window.onload = async () => {
@@ -76,7 +76,7 @@
         resultDiv.innerHTML = "⏳ กำลังคำนวณ...";
 
         try {
-            const response = await fetch(`${backend_uri}/exchange-food'`, {
+            const response = await fetch(`${backend_uri}/exchange-food`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ foodName, amount: Number(amount), nutrientType })

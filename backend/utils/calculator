@@ -1,0 +1,23 @@
+// utils/calculator.js
+const calculateExchange = (baseFood, amount, nutrientType, targetFoods) => {
+    // 1. คำนวณสารอาหารต้นแบบ (ทำให้เป็น 2 ตำแหน่ง)
+    const baseNutrientValue = (Number(baseFood[nutrientType]) / 100) * amount;
+
+    return targetFoods
+        .filter(target => Number(target[nutrientType]) > 0)
+        .map(target => {
+            // 2. คำนวณปริมาณอาหารทดแทน
+            const exchangeAmount = baseNutrientValue / (Number(target[nutrientType]) / 100);
+            
+            return {
+                name: target.name,
+                // ใช้ Number(....toFixed(2)) เพื่อให้เป็นตัวเลขที่มีทศนิยม 2 ตำแหน่ง
+                amount: Number(exchangeAmount.toFixed(2)), 
+                unit: "g",
+                nutrientValue: Number(baseNutrientValue.toFixed(2)),
+                type: nutrientType
+            };
+        });
+};
+
+module.exports = { calculateExchange };

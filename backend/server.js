@@ -19,6 +19,10 @@ mongoose.connect(MONGODB_URI)
   .then(() => console.log("MongoDB Connected"))
   .catch(err => console.error("Connection Error:", err));
 
+app.get('/', async ( req, res) => {
+  res.send("Welcome to Nutrient_exchange!")
+})
+
 // --- [Routes เดิมของคุณ] ---
 app.post("/exchange-food", async (req, res) => {
   try {

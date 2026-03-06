@@ -41,11 +41,12 @@
 </div>
 
 <script>
+    const backend_uri = process.env.BACKEND_URL
     // ดึงรายชื่ออาหารมาใส่ใน datalist ทันทีที่โหลดหน้าเว็บ
     window.onload = async () => {
         const dataList = document.getElementById('foodOptions');
         try {
-            const response = await fetch('http://localhost:8000/foods');
+            const response = await fetch(`${backend_uri}/foods`);
             const foods = await response.json();
             
             dataList.innerHTML = ''; 
@@ -75,7 +76,7 @@
         resultDiv.innerHTML = "⏳ กำลังคำนวณ...";
 
         try {
-            const response = await fetch('http://localhost:8000/exchange-food', {
+            const response = await fetch(`${backend_uri}/exchange-food'`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ foodName, amount: Number(amount), nutrientType })

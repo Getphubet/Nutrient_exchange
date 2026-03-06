@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>ระบบแลกเปลี่ยนอาหาร</title>
+    <style>
+        body { font-family: 'Tahoma', sans-serif; padding: 20px; background-color: #f4f7f6; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        input, select, button { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; }
+        button { background-color: #28a745; color: white; cursor: pointer; border: none; font-weight: bold; font-size: 16px; }
+        button:hover { background-color: #218838; }
+        #result { margin-top: 20px; padding: 15px; border-top: 2px solid #eee; }
+        .exchange-item { background: #e9ecef; padding: 10px; margin: 5px 0; border-radius: 5px; border-left: 5px solid #28a745; }
+        label { font-weight: bold; color: #333; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🔄 ระบบแลกเปลี่ยนอาหาร</h2>
+    
+    <label>พิมพ์ชื่อหรือเลือกอาหารต้นแบบ:</label>
+    <input list="foodOptions" id="foodName" placeholder="พิมพ์เพื่อค้นหาชื่ออาหาร..." autocomplete="off">
+    <datalist id="foodOptions">
+        </datalist>
+    
+    <label>ปริมาณ (กรัม):</label>
+    <input type="number" id="amount" value="100">
+    
+    <label>แลกเปลี่ยนด้วยหน่วย:</label>
+    <select id="nutrientType">
+        <option value="calories">พลังงาน (Calories)</option>
+        <option value="carbs">คาร์โบไฮเดรต (Carbs)</option>
+        <option value="protein">โปรตีน (Protein)</option>
+        <option value="fat">ไขมัน (Fat)</option>
+    </select>
+
+    <button onclick="calculateExchange()">คำนวณการแลกเปลี่ยน</button>
+
+    <div id="result"></div>
+</div>
+
+<script>
+    // ดึงรายชื่ออาหารมาใส่ใน datalist ทันทีที่โหลดหน้าเว็บ
+    window.onload = async () => {
+        const dataList = document.getElementById('foodOptions');
+        try {
+            const response = await fetch('http://localhost:8000/foods');
+            const foods = await response.json();
+            
+            dataList.innerHTML = ''; 
+            foods.forEach(food => {
+                const option = document.createElement('option');
+                option.value = food.name; // ค่าที่ส่งไป Server
+                // แสดงชื่ออาหารและหมวดหมู่ในรายการแนะนำ
+                option.textContent = `หมวด: ${food.category}`; 
+                dataList.appendChild(option);
+            });
+        } catch (error) {
+            console.error("โหลดข้อมูลล้มเหลว:", error);
+        }
+    };
+
+    async function calculateExchange() {
+        const foodName = document.getElementById('foodName').value;
+        const amount = document.getElementById('amount').value;
+        const nutrientType = document.getElementById('nutrientType').value;
+        const resultDiv = document.getElementById('result');
+
+        if (!foodName) {
+            alert("กรุณาเลือกหรือพิมพ์ชื่ออาหารก่อนครับ");
+            return;
+        }
+
+        resultDiv.innerHTML = "⏳ กำลังคำนวณ...";
+
+        try {
+            const response = await fetch('http://localhost:8000/exchange-food', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ foodName, amount: Number(amount), nutrientType })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                let html = `<h3>✅ ต้นฉบับ: ${data.original.name} (${data.original.inputAmount}g)</h3>`;
+                html += `<p>ได้รับ ${data.original.nutrientType}: <strong>${data.original.totalNutrient}</strong></p>`;
+                html += `<h4>รายการแลกเปลี่ยนในหมวด ${data.original.category}:</h4>`;
+                
+                data.exchanges.forEach(item => {
+                    html += `
+                        <div class="exchange-item">
+                            กิน <strong>${item.name}</strong> ปริมาณ <strong>${item.amount} g</strong> 
+                            <br><small>(จะได้ ${item.type} เท่ากันที่ ${item.nutrientValue})</small>
+                        </div>`;
+                });
+                resultDiv.innerHTML = html;
+            } else {
+                resultDiv.innerHTML = `<p style="color:red;">❌ ไม่พบข้อมูล: ${data.message}</p>`;
+            }
+        } catch (error) {
+            resultDiv.innerHTML = `<p style="color:red;">⚠️ เชื่อมต่อ Server ไม่ได้ (ลองเช็ก node server.js)</p>`;
+        }
+    }
+</script>
+</body>
+</html>

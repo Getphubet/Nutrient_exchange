@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const Food = require("./models/Food");
 const { calculateExchange } = require("./utils/calculator");
+require('dotenv').config()
 
 const app = express();
 
@@ -16,7 +17,7 @@ app.use(express.json());
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/nutrientDB_v2";
 
 mongoose.connect(MONGODB_URI)
-  .then(() => console.log("MongoDB Connected"))
+  .then(() => console.log("MongoDB Connected: ", MONGODB_URI))
   .catch(err => console.error("Connection Error:", err));
 
 app.get('/', async ( req, res) => {
@@ -65,6 +66,46 @@ app.get("/foods", async (req, res) => {
     const foods = await Food.find();
     res.json(foods);
 });
+
+app.post("/add-food", async (req, res) => {
+  try {
+    const { name, category, protein, fat, carbohydrate, calories } = req.body;
+
+    // 1. ตรวจสอบข้อมูลเบื้องต้น (Validation)
+    if (!name || !category) {
+      return res.status(400).json({ message: "กรุณาระบุชื่ออาหารและหมวดหมู่" });
+    }
+
+    // 2. สร้าง Instance ใหม่จาก Model Food
+    const newFood = new Food({
+      name,
+      category,
+      protein: protein || 0,
+      fat: fat || 0,
+      carbohydrate: carbohydrate || 0,
+      calories: calories || 0
+    });
+
+    // 3. บันทึกลง MongoDB
+    const savedFood = await newFood.save();
+
+    res.status(201).json({
+      success: true,
+      message: "เพิ่มข้อมูลอาหารเรียบร้อยแล้ว",
+      data: savedFood
+    });
+
+  } catch (error) {
+    console.error("Add Food Error:", error);
+    // กรณีชื่อซ้ำ (ถ้าใน Model ตั้ง unique: true ไว้)
+    if (error.code === 11000) {
+      return res.status(400).json({ message: "มีชื่ออาหารนี้อยู่ในระบบแล้ว" });
+    }
+    res.status(500).json({ error: "ไม่สามารถเพิ่มข้อมูลได้" });
+  }
+});
+
+
 
 // --- [จุดที่ 3: ส่วนสำคัญสำหรับการ Deploy บน Vercel] ---
 

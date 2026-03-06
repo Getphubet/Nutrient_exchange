@@ -41,7 +41,7 @@
 </div>
 
 <script>
-    const backend_uri = process.env.BACKEND_URL
+    const backend_uri = typeof CONFIG !== 'undefined' ? CONFIG.BACKEND_URL : 'http://localhost:8000';
     // ดึงรายชื่ออาหารมาใส่ใน datalist ทันทีที่โหลดหน้าเว็บ
     window.onload = async () => {
         const dataList = document.getElementById('foodOptions');

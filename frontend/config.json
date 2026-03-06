@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "build": "echo \"const CONFIG = { BACKEND_URL: '$BACKEND_URL' };\" > config.js"
+  }
+}

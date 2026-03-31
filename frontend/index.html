@@ -2,106 +2,347 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ระบบแลกเปลี่ยนอาหาร</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Prompt:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Tahoma', sans-serif; padding: 20px; background-color: #f4f7f6; }
-        .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        input, select, button { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; }
-        button { background-color: #28a745; color: white; cursor: pointer; border: none; font-weight: bold; font-size: 16px; }
-        button:hover { background-color: #218838; }
-        #result { margin-top: 20px; padding: 15px; border-top: 2px solid #eee; }
-        .exchange-item { background: #e9ecef; padding: 10px; margin: 5px 0; border-radius: 5px; border-left: 5px solid #28a745; }
-        label { font-weight: bold; color: #333; }
+        :root {
+            --green-dark: #1a4d2e;
+            --green-mid: #2d7a4f;
+            --green-light: #4caf78;
+            --green-pale: #e8f5ee;
+            --green-glow: #a8e6be;
+            --cream: #fafdf7;
+            --text-dark: #1a2e1f;
+            --text-mid: #3d5c45;
+            --text-light: #7aad88;
+            --border: #c8e6d4;
+            --shadow: rgba(26, 77, 46, 0.12);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background: var(--cream);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+            background-image:
+                radial-gradient(ellipse at 20% 20%, rgba(76,175,120,0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(45,122,79,0.06) 0%, transparent 50%);
+        }
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px 44px;
+            width: 100%;
+            max-width: 580px;
+            box-shadow: 0 4px 6px var(--shadow), 0 20px 60px rgba(26,77,46,0.08), 0 0 0 1px rgba(200,230,212,0.6);
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--green-mid), var(--green-light), var(--green-mid));
+        }
+        .header { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
+        .header-icon {
+            width: 44px; height: 44px;
+            background: linear-gradient(135deg, var(--green-mid), var(--green-light));
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(45,122,79,0.3);
+        }
+        .header h1 { font-family: 'Prompt', sans-serif; font-size: 22px; font-weight: 600; color: var(--green-dark); letter-spacing: -0.3px; }
+        .header p { font-size: 13px; color: var(--text-light); margin-top: 1px; }
+        .field { margin-bottom: 20px; }
+        .field label { display: block; font-size: 13px; font-weight: 600; color: var(--text-mid); margin-bottom: 8px; letter-spacing: 0.3px; text-transform: uppercase; }
+        .field label span { font-size: 11px; color: var(--text-light); font-weight: 400; text-transform: none; letter-spacing: 0; margin-left: 4px; }
+        .input-base {
+            width: 100%; padding: 13px 16px;
+            border: 1.5px solid var(--border); border-radius: 12px;
+            font-family: 'Sarabun', sans-serif; font-size: 15px; color: var(--text-dark);
+            background: var(--cream); transition: all 0.2s ease; outline: none; appearance: none;
+        }
+        .input-base:focus { border-color: var(--green-mid); background: white; box-shadow: 0 0 0 4px rgba(45,122,79,0.08); }
+        .input-base::placeholder { color: #b8d4c0; }
+        .amount-row { display: flex; gap: 10px; }
+        .amount-row .amount-input { flex: 1; }
+        .unit-select-wrap { position: relative; width: 140px; flex-shrink: 0; }
+        .unit-select-wrap select {
+            width: 100%; padding: 13px 36px 13px 14px;
+            border: 1.5px solid var(--border); border-radius: 12px;
+            font-family: 'Sarabun', sans-serif; font-size: 14px; color: var(--text-dark);
+            background: var(--cream); appearance: none; cursor: pointer; outline: none; transition: all 0.2s ease;
+        }
+        .unit-select-wrap select:focus { border-color: var(--green-mid); background: white; box-shadow: 0 0 0 4px rgba(45,122,79,0.08); }
+        .unit-select-wrap::after { content: ''; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 6px solid var(--text-light); pointer-events: none; }
+        .nutrient-select-wrap { position: relative; }
+        .nutrient-select-wrap select {
+            width: 100%; padding: 13px 40px 13px 16px;
+            border: 1.5px solid var(--border); border-radius: 12px;
+            font-family: 'Sarabun', sans-serif; font-size: 15px; color: var(--text-dark);
+            background: var(--cream); appearance: none; cursor: pointer; outline: none; transition: all 0.2s ease;
+        }
+        .nutrient-select-wrap select:focus { border-color: var(--green-mid); background: white; box-shadow: 0 0 0 4px rgba(45,122,79,0.08); }
+        .nutrient-select-wrap::after { content: ''; position: absolute; right: 16px; top: 50%; transform: translateY(-50%); width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 6px solid var(--text-light); pointer-events: none; }
+        .display-units { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+        .unit-chip {
+            padding: 8px 16px; border-radius: 20px;
+            border: 1.5px solid var(--border); background: var(--cream);
+            font-family: 'Sarabun', sans-serif; font-size: 14px; color: var(--text-mid);
+            cursor: pointer; transition: all 0.2s ease; user-select: none;
+        }
+        .unit-chip:hover { border-color: var(--green-light); background: var(--green-pale); color: var(--green-dark); }
+        .unit-chip.active { border-color: var(--green-mid); background: var(--green-mid); color: white; box-shadow: 0 3px 10px rgba(45,122,79,0.3); }
+        .unit-chip .chip-sub { font-size: 10px; opacity: 0.75; margin-left: 3px; }
+        .divider { height: 1px; background: var(--border); margin: 24px 0; }
+        .btn-calculate {
+            width: 100%; padding: 15px;
+            background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 100%);
+            color: white; border: none; border-radius: 14px;
+            font-family: 'Prompt', sans-serif; font-size: 16px; font-weight: 600;
+            cursor: pointer; letter-spacing: 0.3px; transition: all 0.25s ease;
+            box-shadow: 0 6px 20px rgba(26,77,46,0.3);
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn-calculate:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(26,77,46,0.4); }
+        .btn-calculate:active { transform: translateY(0); }
+        #result { margin-top: 24px; }
+        .result-header { background: var(--green-pale); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; margin-bottom: 12px; }
+        .result-header h3 { font-family: 'Prompt', sans-serif; font-size: 15px; font-weight: 600; color: var(--green-dark); margin-bottom: 4px; }
+        .result-header p { font-size: 13px; color: var(--text-mid); }
+        .result-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-light); margin: 16px 0 8px; }
+        .exchange-item {
+            background: white; border: 1.5px solid var(--border);
+            border-radius: 12px; padding: 13px 16px; margin-bottom: 8px;
+            display: flex; flex-direction: column; transition: border-color 0.2s;
+        }
+        .exchange-item:hover { border-color: var(--green-light); }
+        .item-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; gap: 10px; }
+        .food-name { font-weight: 600; color: var(--text-dark); font-size: 15px; padding-top: 2px; }
+        .amount-badges { display: flex; flex-wrap: wrap; gap: 5px; justify-content: flex-end; }
+        .nutrient-badge {
+            background: var(--green-pale); border: 1px solid var(--green-glow);
+            color: var(--green-dark); font-size: 12px; font-weight: 600;
+            padding: 4px 10px; border-radius: 8px; white-space: nowrap;
+        }
+        .nutrient-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+        .nutrient-pill {
+            font-size: 11px; padding: 3px 9px; border-radius: 6px;
+            background: #f4f4f4; color: var(--text-mid); border: 1px solid #e0e0e0;
+        }
+        .nutrient-pill.highlight {
+            background: var(--green-pale); border-color: var(--green-glow);
+            color: var(--green-dark); font-weight: 700;
+        }
+        .loading-text { text-align: center; color: var(--text-light); font-size: 14px; padding: 20px; }
+        .error-text { color: #c0392b; background: #fdf0ed; border: 1px solid #f5c6be; border-radius: 10px; padding: 12px 16px; font-size: 14px; }
     </style>
 </head>
 <body>
+<div class="card">
+    <div class="header">
+        <div class="header-icon">&#128260;</div>
+        <div>
+            <h1>แลกเปลี่ยนอาหาร</h1>
+            <p>คำนวณปริมาณสารอาหารที่เทียบเท่ากัน</p>
+        </div>
+    </div>
 
-<div class="container">
-    <h2>🔄 ระบบแลกเปลี่ยนอาหาร</h2>
-    
-    <label>พิมพ์ชื่อหรือเลือกอาหารต้นแบบ:</label>
-    <input list="foodOptions" id="foodName" placeholder="พิมพ์เพื่อค้นหาชื่ออาหาร..." autocomplete="off">
-    <datalist id="foodOptions">
-        </datalist>
-    
-    <label>ปริมาณ (กรัม):</label>
-    <input type="number" id="amount" value="100">
-    
-    <label>แลกเปลี่ยนด้วยหน่วย:</label>
-    <select id="nutrientType">
-        <option value="calories">พลังงาน (Calories)</option>
-        <option value="carbs">คาร์โบไฮเดรต (Carbs)</option>
-        <option value="protein">โปรตีน (Protein)</option>
-        <option value="fat">ไขมัน (Fat)</option>
-    </select>
+    <div class="field">
+        <label>อาหารต้นแบบ</label>
+        <input list="foodOptions" id="foodName" class="input-base"
+               placeholder="พิมพ์หรือเลือกชื่ออาหาร..." autocomplete="off">
+        <datalist id="foodOptions"></datalist>
+    </div>
 
-    <button onclick="calculateExchange()">คำนวณการแลกเปลี่ยน</button>
+    <div class="field">
+        <label>ปริมาณ <span>กรอกตัวเลขและเลือกหน่วย</span></label>
+        <div class="amount-row">
+            <input type="number" id="amount" class="input-base amount-input" value="100" min="1" placeholder="100">
+            <div class="unit-select-wrap">
+                <select id="amountUnit">
+                    <option value="g">กรัม (g)</option>
+                    <option value="tsp">ช้อนชา (5g)</option>
+                    <option value="tbsp">ช้อนโต๊ะ (15g)</option>
+                    <option value="ladle">ทัพพี (60g)</option>
+                    <option value="cup">ถ้วยตวง (240g)</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="field">
+        <label>แลกเปลี่ยนด้วย</label>
+        <div class="nutrient-select-wrap">
+            <select id="nutrientType">
+                <option value="calories">พลังงาน (Calories)</option>
+                <option value="carbs">คาร์โบไฮเดรต (Carbs)</option>
+                <option value="protein">โปรตีน (Protein)</option>
+                <option value="fat">ไขมัน (Fat)</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="field">
+        <label>แสดงผลเป็นหน่วย <span>เลือกได้หลายหน่วย</span></label>
+        <div class="display-units">
+            <div class="unit-chip active" data-unit="g" onclick="toggleUnit(this)">
+                กรัม <span class="chip-sub">(g)</span>
+            </div>
+            <div class="unit-chip" data-unit="tsp" onclick="toggleUnit(this)">
+                ช้อนชา <span class="chip-sub">(5g)</span>
+            </div>
+            <div class="unit-chip" data-unit="tbsp" onclick="toggleUnit(this)">
+                ช้อนโต๊ะ <span class="chip-sub">(15g)</span>
+            </div>
+            <div class="unit-chip" data-unit="ladle" onclick="toggleUnit(this)">
+                ทัพพี <span class="chip-sub">(60g)</span>
+            </div>
+            <div class="unit-chip" data-unit="cup" onclick="toggleUnit(this)">
+                ถ้วยตวง <span class="chip-sub">(240g)</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <button class="btn-calculate" onclick="calculateExchange()">
+        &#9878; คำนวณการแลกเปลี่ยน
+    </button>
 
     <div id="result"></div>
 </div>
 
 <script>
-    const backend_uri = "https://nutrient-exchange.vercel.app"
-    // ดึงรายชื่ออาหารมาใส่ใน datalist ทันทีที่โหลดหน้าเว็บ
-    window.onload = async () => {
-        const dataList = document.getElementById('foodOptions');
-        try {
-            const response = await fetch(`${backend_uri}/foods`);
-            const foods = await response.json();
-            
-            dataList.innerHTML = ''; 
-            foods.forEach(food => {
-                const option = document.createElement('option');
-                option.value = food.name; // ค่าที่ส่งไป Server
-                // แสดงชื่ออาหารและหมวดหมู่ในรายการแนะนำ
-                option.textContent = `หมวด: ${food.category}`; 
-                dataList.appendChild(option);
-            });
-        } catch (error) {
-            console.error("โหลดข้อมูลล้มเหลว:", error);
-        }
+    var backend_uri = "http://localhost:8000";
+
+    var unitToGram = {
+        g:     1,
+        tsp:   5,
+        tbsp:  15,
+        ladle: 60,
+        cup:   240
     };
 
+    var unitLabel = {
+        g:     "g",
+        tsp:   "ช้อนชา",
+        tbsp:  "ช้อนโต๊ะ",
+        ladle: "ทัพพี",
+        cup:   "ถ้วยตวง"
+    };
+
+    function gramsToUnit(grams, unit) {
+        var factor = unitToGram[unit] || 1;
+        var val    = grams / factor;
+        var display = (val % 1 === 0) ? val : parseFloat(val.toFixed(2));
+        return display + " " + unitLabel[unit];
+    }
+
+    window.onload = async function() {
+        var dataList = document.getElementById("foodOptions");
+        try {
+            var res   = await fetch(backend_uri + "/foods");
+            var foods = await res.json();
+            dataList.innerHTML = "";
+            foods.forEach(function(food) {
+                var opt = document.createElement("option");
+                opt.value = food.name;
+                opt.textContent = "หมวด: " + food.category;
+                dataList.appendChild(opt);
+            });
+        } catch(e) { console.error("โหลดข้อมูลล้มเหลว:", e); }
+    };
+
+    function toggleUnit(el) { el.classList.toggle("active"); }
+
     async function calculateExchange() {
-        const foodName = document.getElementById('foodName').value;
-        const amount = document.getElementById('amount').value;
-        const nutrientType = document.getElementById('nutrientType').value;
-        const resultDiv = document.getElementById('result');
+        var foodName     = document.getElementById("foodName").value;
+        var amountRaw    = Number(document.getElementById("amount").value);
+        var inputUnit    = document.getElementById("amountUnit").value;
+        var nutrientType = document.getElementById("nutrientType").value;
+        var resultDiv    = document.getElementById("result");
 
-        if (!foodName) {
-            alert("กรุณาเลือกหรือพิมพ์ชื่ออาหารก่อนครับ");
-            return;
-        }
+        if (!foodName) { alert("กรุณาเลือกหรือพิมพ์ชื่ออาหารก่อนครับ"); return; }
 
-        resultDiv.innerHTML = "⏳ กำลังคำนวณ...";
+        var amountInGrams = amountRaw * (unitToGram[inputUnit] || 1);
+
+        var activeChips = Array.from(document.querySelectorAll(".unit-chip.active"))
+                               .map(function(c) { return c.dataset.unit; });
+
+        resultDiv.innerHTML = "<p class='loading-text'>กำลังคำนวณ...</p>";
 
         try {
-            const response = await fetch(`${backend_uri}/exchange-food`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ foodName, amount: Number(amount), nutrientType })
+            var response = await fetch(backend_uri + "/exchange-food", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ foodName: foodName, amount: amountInGrams, nutrientType: nutrientType })
+            });
+            var data = await response.json();
+
+            if (!response.ok || !data.success) {
+                resultDiv.innerHTML = "<p class='error-text'>ไม่พบข้อมูล: " + (data.message || "เกิดข้อผิดพลาด") + "</p>";
+                return;
+            }
+
+            var origDisplay = amountRaw + " " + unitLabel[inputUnit]
+                + (inputUnit !== "g" ? " (= " + amountInGrams.toFixed(1) + " g)" : "");
+
+            var html = "<div class='result-header'>"
+                + "<h3>" + data.original.name + " &middot; " + origDisplay + "</h3>"
+                + "<p>" + data.original.nutrientType + ": <strong>" + data.original.totalNutrient + "</strong>"
+                + " &middot; หมวด: " + data.original.category + "</p>"
+                + "</div>"
+                + "<div class='result-label'>รายการแลกเปลี่ยน</div>";
+
+            data.exchanges.forEach(function(item) {
+                var amountGrams = Number(item.amount);
+
+                var badges = "";
+                if (activeChips.length > 0) {
+                    badges = activeChips.map(function(u) {
+                        return "<span class='nutrient-badge'>" + gramsToUnit(amountGrams, u) + "</span>";
+                    }).join("");
+                } else {
+                    badges = "<span class='nutrient-badge'>" + amountGrams + " g</span>";
+                }
+
+                var pillDefs = [
+                    { key: "calories", label: "Cal",     unit: "kcal", val: item.calories },
+                    { key: "carbs",    label: "Carbs",   unit: "g",    val: item.carbs    },
+                    { key: "protein",  label: "Protein", unit: "g",    val: item.protein  },
+                    { key: "fat",      label: "Fat",     unit: "g",    val: item.fat      }
+                ];
+
+                var pills = pillDefs.map(function(n) {
+                    var isHighlight = (n.key === nutrientType);
+                    var cls = "nutrient-pill" + (isHighlight ? " highlight" : "");
+                    var v   = (n.val !== undefined && n.val !== null) ? n.val : "—";
+                    return "<span class='" + cls + "'>"
+                        + n.label + ": <strong>" + v + "</strong> " + n.unit
+                        + "</span>";
+                }).join("");
+
+                html += "<div class='exchange-item'>"
+                    + "<div class='item-top'>"
+                    +   "<div class='food-name'>" + item.name + "</div>"
+                    +   "<div class='amount-badges'>" + badges + "</div>"
+                    + "</div>"
+                    + "<div class='nutrient-pills'>" + pills + "</div>"
+                    + "</div>";
             });
 
-            const data = await response.json();
+            resultDiv.innerHTML = html;
 
-            if (data.success) {
-                let html = `<h3>✅ ต้นฉบับ: ${data.original.name} (${data.original.inputAmount}g)</h3>`;
-                html += `<p>ได้รับ ${data.original.nutrientType}: <strong>${data.original.totalNutrient}</strong></p>`;
-                html += `<h4>รายการแลกเปลี่ยนในหมวด ${data.original.category}:</h4>`;
-                
-                data.exchanges.forEach(item => {
-                    html += `
-                        <div class="exchange-item">
-                            กิน <strong>${item.name}</strong> ปริมาณ <strong>${item.amount} g</strong> 
-                            <br><small>(จะได้ ${item.type} เท่ากันที่ ${item.nutrientValue})</small>
-                        </div>`;
-                });
-                resultDiv.innerHTML = html;
-            } else {
-                resultDiv.innerHTML = `<p style="color:red;">❌ ไม่พบข้อมูล: ${data.message}</p>`;
-            }
-        } catch (error) {
-            resultDiv.innerHTML = `<p style="color:red;">⚠️ เชื่อมต่อ Server ไม่ได้ (ลองเช็ก node server.js)</p>`;
+        } catch(e) {
+            resultDiv.innerHTML = "<p class='error-text'>เชื่อมต่อ Server ไม่ได้</p>";
         }
     }
 </script>

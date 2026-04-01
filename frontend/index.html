@@ -24,14 +24,14 @@
             font-family: 'Sarabun', sans-serif;
             background: var(--cream);
             min-height: 100vh;
-            display: flex; align-items: center; justify-content: center;
+            display: flex; align-items: flex-start; justify-content: center;
             padding: 30px 20px;
             background-image:
                 radial-gradient(ellipse at 20% 20%, rgba(76,175,120,0.08) 0%, transparent 50%),
                 radial-gradient(ellipse at 80% 80%, rgba(45,122,79,0.06) 0%, transparent 50%);
         }
         .card {
-            background: white; border-radius: 24px; padding: 40px 44px;
+            background: white; border-radius: 24px; padding: 32px 44px 40px;
             width: 100%; max-width: 580px;
             box-shadow: 0 4px 6px var(--shadow), 0 20px 60px rgba(26,77,46,0.08), 0 0 0 1px rgba(200,230,212,0.6);
             position: relative; overflow: hidden;
@@ -40,7 +40,7 @@
             content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
             background: linear-gradient(90deg, var(--green-mid), var(--green-light), var(--green-mid));
         }
-        .header { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
+        .header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
         .header-icon {
             width: 44px; height: 44px;
             background: linear-gradient(135deg, var(--green-mid), var(--green-light));
@@ -49,6 +49,18 @@
         }
         .header h1 { font-family: 'Prompt', sans-serif; font-size: 22px; font-weight: 600; color: var(--green-dark); letter-spacing: -0.3px; }
         .header p { font-size: 13px; color: var(--text-light); margin-top: 1px; }
+
+        /* Tabs */
+        .tabs { display: flex; gap: 4px; background: var(--green-pale); border-radius: 12px; padding: 4px; margin-bottom: 28px; }
+        .tab-btn {
+            flex: 1; padding: 9px; border: none; border-radius: 9px;
+            font-family: 'Sarabun', sans-serif; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s ease; background: transparent; color: var(--text-mid);
+        }
+        .tab-btn.active { background: white; color: var(--green-dark); box-shadow: 0 2px 8px rgba(26,77,46,0.1); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
         .field { margin-bottom: 20px; }
         .field label { display: block; font-size: 13px; font-weight: 600; color: var(--text-mid); margin-bottom: 8px; letter-spacing: 0.3px; text-transform: uppercase; }
         .field label span { font-size: 11px; color: var(--text-light); font-weight: 400; text-transform: none; letter-spacing: 0; margin-left: 4px; }
@@ -100,12 +112,10 @@
         .btn-calculate:active { transform: translateY(0); }
         #result { margin-top: 24px; }
 
-        /* Result Header */
+        /* Result */
         .result-header { background: var(--green-pale); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; margin-bottom: 12px; }
         .result-header h3 { font-family: 'Prompt', sans-serif; font-size: 15px; font-weight: 600; color: var(--green-dark); margin-bottom: 4px; }
         .result-header p { font-size: 13px; color: var(--text-mid); }
-
-        /* % จาน progress bar */
         .plate-bar-wrap { margin-top: 10px; }
         .plate-bar-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
         .plate-bar-label span { font-size: 12px; color: var(--text-mid); }
@@ -119,16 +129,12 @@
         .plate-bar-fill.ok   { background: linear-gradient(90deg, var(--green-mid), var(--green-light)); }
         .plate-bar-fill.warn { background: linear-gradient(90deg, #ffa726, #ffcc02); }
         .plate-bar-fill.over { background: linear-gradient(90deg, #ef5350, #ff7043); }
-
-        /* % จานใน exchange-item */
         .plate-pill { font-size: 11px; padding: 3px 9px; border-radius: 6px; font-weight: 600; white-space: nowrap; }
         .plate-pill.ok   { background: #e8f5ee; color: #2d7a4f; border: 1px solid #a8e6be; }
         .plate-pill.warn { background: #fff3e0; color: #e65100; border: 1px solid #ffcc80; }
         .plate-pill.over { background: #fdf0ed; color: #c0392b; border: 1px solid #f5c6be; }
-
-        /* ปุ่มดูจาน */
         .btn-plate {
-            display: inline-flex; align-items: center; gap: 6px;
+            display: inline-flex; align-items: center; gap: 6px; margin-top: 10px;
             padding: 7px 14px; background: white; border: 1.5px solid var(--green-mid);
             border-radius: 10px; color: var(--green-dark);
             font-family: 'Sarabun', sans-serif; font-size: 13px; font-weight: 600;
@@ -143,8 +149,6 @@
             cursor: pointer; text-decoration: none; transition: all 0.2s ease;
         }
         .btn-plate-sm:hover { border-color: var(--green-mid); color: var(--green-dark); background: var(--green-pale); }
-
-        /* Search */
         .result-search-wrap { position: relative; margin-bottom: 8px; }
         .result-search-wrap input {
             width: 100%; padding: 10px 16px 10px 38px; border: 1.5px solid var(--border); border-radius: 10px;
@@ -156,7 +160,6 @@
         .result-search-wrap::before { content: '🔍'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 13px; pointer-events: none; }
         .result-count { font-size: 12px; color: var(--text-light); margin-bottom: 10px; }
         .no-result-text { text-align: center; color: var(--text-light); font-size: 14px; padding: 16px; }
-
         .exchange-item {
             background: white; border: 1.5px solid var(--border); border-radius: 12px;
             padding: 13px 16px; margin-bottom: 8px; display: flex; flex-direction: column; transition: border-color 0.2s;
@@ -177,6 +180,41 @@
         .item-footer { display: flex; justify-content: flex-end; margin-top: 8px; }
         .loading-text { text-align: center; color: var(--text-light); font-size: 14px; padding: 20px; }
         .error-text { color: #c0392b; background: #fdf0ed; border: 1px solid #f5c6be; border-radius: 10px; padding: 12px 16px; font-size: 14px; }
+        .success-text { color: #2d7a4f; background: var(--green-pale); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; font-size: 14px; }
+
+        /* Add food tab */
+        .nutrient-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        /* Password Modal */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.4); z-index: 100;
+            align-items: center; justify-content: center;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal {
+            background: white; border-radius: 20px; padding: 28px 32px;
+            width: 100%; max-width: 360px; box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        .modal h3 { font-family: 'Prompt', sans-serif; font-size: 17px; font-weight: 600; color: var(--green-dark); margin-bottom: 6px; }
+        .modal p { font-size: 13px; color: var(--text-light); margin-bottom: 16px; }
+        .modal input {
+            width: 100%; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: 12px;
+            font-family: 'Sarabun', sans-serif; font-size: 15px; color: var(--text-dark);
+            background: var(--cream); outline: none; margin-bottom: 12px;
+        }
+        .modal input:focus { border-color: var(--green-mid); background: white; box-shadow: 0 0 0 4px rgba(45,122,79,0.08); }
+        .modal-btns { display: flex; gap: 8px; }
+        .modal-btns button {
+            flex: 1; padding: 11px; border-radius: 12px; border: none;
+            font-family: 'Sarabun', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-confirm { background: var(--green-mid); color: white; }
+        .btn-confirm:hover { background: var(--green-dark); }
+        .btn-cancel { background: #f4f4f4; color: var(--text-mid); }
+        .btn-cancel:hover { background: #e8e8e8; }
+        .modal-error { font-size: 12px; color: #c0392b; margin-bottom: 8px; display: none; }
     </style>
 </head>
 <body>
@@ -184,63 +222,108 @@
     <div class="header">
         <div class="header-icon">&#128260;</div>
         <div>
-            <h1>แลกเปลี่ยนอาหาร</h1>
-            <p>คำนวณปริมาณสารอาหารที่เทียบเท่ากัน</p>
+            <h1>ระบบอาหารสุขภาพ</h1>
+            <p>คำนวณและจัดการข้อมูลสารอาหาร</p>
         </div>
     </div>
 
-    <div class="field">
-        <label>อาหารต้นแบบ</label>
-        <input list="foodOptions" id="foodName" class="input-base" placeholder="พิมพ์หรือเลือกชื่ออาหาร..." autocomplete="off">
-        <datalist id="foodOptions"></datalist>
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('exchange')">🔄 แลกเปลี่ยนอาหาร</button>
+        <button class="tab-btn" onclick="switchTab('add')">➕ เพิ่มอาหาร</button>
     </div>
 
-    <div class="field">
-        <label>ปริมาณ <span>กรอกตัวเลขและเลือกหน่วย</span></label>
-        <div class="amount-row">
-            <input type="number" id="amount" class="input-base amount-input" value="100" min="1" placeholder="100">
-            <div class="unit-select-wrap">
-                <select id="amountUnit">
-                    <option value="g">กรัม (g)</option>
-                    <option value="tsp">ช้อนชา (5g)</option>
-                    <option value="tbsp">ช้อนโต๊ะ (15g)</option>
-                    <option value="ladle">ทัพพี (60g)</option>
-                    <option value="cup">ถ้วยตวง (240g)</option>
+    <!-- Tab: แลกเปลี่ยนอาหาร -->
+    <div id="tab-exchange" class="tab-content active">
+        <div class="field">
+            <label>อาหารต้นแบบ</label>
+            <input list="foodOptions" id="foodName" class="input-base" placeholder="พิมพ์หรือเลือกชื่ออาหาร..." autocomplete="off">
+            <datalist id="foodOptions"></datalist>
+        </div>
+        <div class="field">
+            <label>ปริมาณ <span>กรอกตัวเลขและเลือกหน่วย</span></label>
+            <div class="amount-row">
+                <input type="number" id="amount" class="input-base amount-input" value="100" min="1" placeholder="100">
+                <div class="unit-select-wrap">
+                    <select id="amountUnit">
+                        <option value="g">กรัม (g)</option>
+                        <option value="tsp">ช้อนชา (5g)</option>
+                        <option value="tbsp">ช้อนโต๊ะ (15g)</option>
+                        <option value="ladle">ทัพพี (60g)</option>
+                        <option value="cup">ถ้วยตวง (240g)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <label>แลกเปลี่ยนด้วย</label>
+            <div class="nutrient-select-wrap">
+                <select id="nutrientType">
+                    <option value="calories">พลังงาน (Calories)</option>
+                    <option value="carbs">คาร์โบไฮเดรต (Carbs)</option>
+                    <option value="protein">โปรตีน (Protein)</option>
+                    <option value="fat">ไขมัน (Fat)</option>
                 </select>
             </div>
         </div>
+        <div class="field">
+            <label>แสดงผลเป็นหน่วย <span>เลือกได้หลายหน่วย</span></label>
+            <div class="display-units">
+                <div class="unit-chip active" data-unit="g" onclick="toggleUnit(this)">กรัม <span class="chip-sub">(g)</span></div>
+                <div class="unit-chip" data-unit="tsp" onclick="toggleUnit(this)">ช้อนชา <span class="chip-sub">(5g)</span></div>
+                <div class="unit-chip" data-unit="tbsp" onclick="toggleUnit(this)">ช้อนโต๊ะ <span class="chip-sub">(15g)</span></div>
+                <div class="unit-chip" data-unit="ladle" onclick="toggleUnit(this)">ทัพพี <span class="chip-sub">(60g)</span></div>
+                <div class="unit-chip" data-unit="cup" onclick="toggleUnit(this)">ถ้วยตวง <span class="chip-sub">(240g)</span></div>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <button class="btn-calculate" onclick="calculateExchange()">&#9878; คำนวณการแลกเปลี่ยน</button>
+        <div id="result"></div>
     </div>
 
-    <div class="field">
-        <label>แลกเปลี่ยนด้วย</label>
-        <div class="nutrient-select-wrap">
-            <select id="nutrientType">
-                <option value="calories">พลังงาน (Calories)</option>
-                <option value="carbs">คาร์โบไฮเดรต (Carbs)</option>
-                <option value="protein">โปรตีน (Protein)</option>
-                <option value="fat">ไขมัน (Fat)</option>
-            </select>
+    <!-- Tab: เพิ่มอาหาร -->
+    <div id="tab-add" class="tab-content">
+        <div class="field">
+            <label>ชื่ออาหาร</label>
+            <input type="text" id="addName" class="input-base" placeholder="เช่น ข้าวกล้องหุงสุก">
+        </div>
+        <div class="field">
+            <label>หมวดหมู่</label>
+            <div class="nutrient-select-wrap">
+                <select id="addCategory" class="input-base" style="padding:13px 40px 13px 16px">
+                    <option value="คาร์โบไฮเดรต">คาร์โบไฮเดรต</option>
+                    <option value="โปรตีน">โปรตีน</option>
+                    <option value="ไขมัน">ไขมัน</option>
+                </select>
+            </div>
+        </div>
+        <div class="field">
+            <label>สารอาหาร <span>ต่อ 100g</span></label>
+            <div class="nutrient-grid">
+                <input type="number" id="addCalories" class="input-base" placeholder="พลังงาน (kcal)" min="0" step="0.1">
+                <input type="number" id="addCarbs"    class="input-base" placeholder="คาร์บ (g)" min="0" step="0.1">
+                <input type="number" id="addProtein"  class="input-base" placeholder="โปรตีน (g)" min="0" step="0.1">
+                <input type="number" id="addFat"      class="input-base" placeholder="ไขมัน (g)" min="0" step="0.1">
+            </div>
+        </div>
+        <div class="divider"></div>
+        <button class="btn-calculate" onclick="openPasswordModal()">➕ เพิ่มอาหารลงฐานข้อมูล</button>
+        <div id="addResult" style="margin-top:16px"></div>
+    </div>
+</div>
+
+<!-- Password Modal -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+        <h3>🔒 ยืนยันตัวตน</h3>
+        <p>กรุณาใส่รหัสผ่านเพื่อเพิ่มข้อมูลอาหาร</p>
+        <p class="modal-error" id="modalError">รหัสผ่านไม่ถูกต้อง</p>
+        <input type="password" id="passwordInput" placeholder="รหัสผ่าน" onkeydown="if(event.key==='Enter') confirmAdd()">
+        <div class="modal-btns">
+            <button class="btn-cancel" onclick="closeModal()">ยกเลิก</button>
+            <button class="btn-confirm" onclick="confirmAdd()">ยืนยัน</button>
         </div>
     </div>
-
-    <div class="field">
-        <label>แสดงผลเป็นหน่วย <span>เลือกได้หลายหน่วย</span></label>
-        <div class="display-units">
-            <div class="unit-chip active" data-unit="g" onclick="toggleUnit(this)">กรัม <span class="chip-sub">(g)</span></div>
-            <div class="unit-chip" data-unit="tsp" onclick="toggleUnit(this)">ช้อนชา <span class="chip-sub">(5g)</span></div>
-            <div class="unit-chip" data-unit="tbsp" onclick="toggleUnit(this)">ช้อนโต๊ะ <span class="chip-sub">(15g)</span></div>
-            <div class="unit-chip" data-unit="ladle" onclick="toggleUnit(this)">ทัพพี <span class="chip-sub">(60g)</span></div>
-            <div class="unit-chip" data-unit="cup" onclick="toggleUnit(this)">ถ้วยตวง <span class="chip-sub">(240g)</span></div>
-        </div>
-    </div>
-
-    <div class="divider"></div>
-
-    <button class="btn-calculate" onclick="calculateExchange()">
-        &#9878; คำนวณการแลกเปลี่ยน
-    </button>
-
-    <div id="result"></div>
 </div>
 
 <script>
@@ -253,26 +336,22 @@
     function gramsToUnit(grams, unit) {
         var factor  = unitToGram[unit] || 1;
         var val     = grams / factor;
-        var display = (val % 1 === 0) ? val : parseFloat(val.toFixed(2));
-        return display + " " + unitLabel[unit];
+        return ((val % 1 === 0) ? val : parseFloat(val.toFixed(2))) + " " + unitLabel[unit];
+    }
+    function platePercent(g) { return parseFloat(((g / PLATE_SIZE) * 100).toFixed(1)); }
+    function plateClass(p)   { return p > 100 ? "over" : p > 75 ? "warn" : "ok"; }
+    function plateEmoji(p)   { return p > 100 ? "⚠️ เกินจาน" : p > 75 ? "🟡 ใกล้เต็ม" : "✅ พอดี"; }
+    function makePlateLink(name, amount, pct, cls, label) {
+        var params = encodeURIComponent(JSON.stringify({ name: name, amount: amount, percent: pct }));
+        return "<a href='plate.html?data=" + params + "' target='_blank' class='" + cls + "'>" + label + "</a>";
     }
 
-    function platePercent(grams) {
-        return parseFloat(((grams / PLATE_SIZE) * 100).toFixed(1));
-    }
-    function plateClass(pct) {
-        if (pct > 100) return "over";
-        if (pct > 75)  return "warn";
-        return "ok";
-    }
-    function plateEmoji(pct) {
-        if (pct > 100) return "⚠️ เกินจาน";
-        if (pct > 75)  return "🟡 ใกล้เต็ม";
-        return "✅ พอดี";
-    }
-    function makePlateLink(name, amount, pct, cssClass, label) {
-        var params = encodeURIComponent(JSON.stringify({ name: name, amount: amount, percent: pct }));
-        return "<a href='plate.html?data=" + params + "' target='_blank' class='" + cssClass + "'>" + label + "</a>";
+    // Tabs
+    function switchTab(tab) {
+        document.querySelectorAll(".tab-content").forEach(function(el) { el.classList.remove("active"); });
+        document.querySelectorAll(".tab-btn").forEach(function(el) { el.classList.remove("active"); });
+        document.getElementById("tab-" + tab).classList.add("active");
+        event.target.classList.add("active");
     }
 
     window.onload = async function() {
@@ -334,29 +413,21 @@
 
             var origDisplay = amountRaw + " " + unitLabel[inputUnit]
                 + (inputUnit !== "g" ? " (= " + amountInGrams.toFixed(1) + " g)" : "");
-
             var origPct   = platePercent(amountInGrams);
             var origClass = plateClass(origPct);
             var barWidth  = Math.min(origPct, 100);
 
             var html = "<div class='result-header'>"
                 + "<h3>" + data.original.name + " &middot; " + origDisplay + "</h3>"
-                + "<p>" + data.original.nutrientType + ": <strong>" + data.original.totalNutrient + "</strong>"
-                + " &middot; หมวด: " + data.original.category + "</p>"
+                + "<p>" + data.original.nutrientType + ": <strong>" + data.original.totalNutrient + "</strong> &middot; หมวด: " + data.original.category + "</p>"
                 + "<div class='plate-bar-wrap'>"
-                +   "<div class='plate-bar-label'>"
-                +     "<span>🍽️ สัดส่วนจาน (600g/มื้อ)</span>"
-                +     "<div><strong>" + origPct + "%</strong> &nbsp;<span class='plate-status " + origClass + "'>" + plateEmoji(origPct) + "</span></div>"
-                +   "</div>"
+                +   "<div class='plate-bar-label'><span>🍽️ สัดส่วนจาน (600g/มื้อ)</span>"
+                +   "<div><strong>" + origPct + "%</strong> &nbsp;<span class='plate-status " + origClass + "'>" + plateEmoji(origPct) + "</span></div></div>"
                 +   "<div class='plate-bar-track'><div class='plate-bar-fill " + origClass + "' style='width:" + barWidth + "%'></div></div>"
                 + "</div>"
-                + "<div style='margin-top:10px'>"
-                + makePlateLink(data.original.name, amountInGrams, origPct, "btn-plate", "🍽️ ดูรูปจานอาหาร")
+                + "<div style='margin-top:10px'>" + makePlateLink(data.original.name, amountInGrams, origPct, "btn-plate", "🍽️ ดูรูปจานอาหาร") + "</div>"
                 + "</div>"
-                + "</div>"
-                + "<div class='result-search-wrap'>"
-                +   "<input type='text' id='resultSearch' placeholder='ค้นหารายการแลกเปลี่ยน...' oninput='filterResults()'>"
-                + "</div>"
+                + "<div class='result-search-wrap'><input type='text' id='resultSearch' placeholder='ค้นหารายการแลกเปลี่ยน...' oninput='filterResults()'></div>"
                 + "<div class='result-count' id='resultCount'>แสดง " + data.exchanges.length + " รายการ</div>"
                 + "<div id='noResultMsg' class='no-result-text' style='display:none'>ไม่พบรายการที่ค้นหา</div>";
 
@@ -365,14 +436,9 @@
                 var itemPct     = platePercent(amountGrams);
                 var itemClass   = plateClass(itemPct);
 
-                var badges = "";
-                if (activeChips.length > 0) {
-                    badges = activeChips.map(function(u) {
-                        return "<span class='nutrient-badge'>" + gramsToUnit(amountGrams, u) + "</span>";
-                    }).join("");
-                } else {
-                    badges = "<span class='nutrient-badge'>" + amountGrams + " g</span>";
-                }
+                var badges = (activeChips.length > 0)
+                    ? activeChips.map(function(u) { return "<span class='nutrient-badge'>" + gramsToUnit(amountGrams, u) + "</span>"; }).join("")
+                    : "<span class='nutrient-badge'>" + amountGrams + " g</span>";
 
                 var pillDefs = [
                     { key: "calories", label: "Cal",     unit: "kcal", val: item.calories },
@@ -380,36 +446,102 @@
                     { key: "protein",  label: "Protein", unit: "g",    val: item.protein  },
                     { key: "fat",      label: "Fat",     unit: "g",    val: item.fat      }
                 ];
-
                 var pills = pillDefs.map(function(n) {
-                    var isHighlight = (n.key === nutrientType);
-                    var cls = "nutrient-pill" + (isHighlight ? " highlight" : "");
+                    var cls = "nutrient-pill" + (n.key === nutrientType ? " highlight" : "");
                     var v   = (n.val !== undefined && n.val !== null) ? n.val : "—";
                     return "<span class='" + cls + "'>" + n.label + ": <strong>" + v + "</strong> " + n.unit + "</span>";
                 }).join("");
 
                 html += "<div class='exchange-item'>"
-                    + "<div class='item-top'>"
-                    +   "<div class='food-name'>" + item.name + "</div>"
-                    +   "<div class='amount-badges'>"
-                    +     badges
-                    +     "<span class='plate-pill " + itemClass + "'>🍽️ " + itemPct + "%</span>"
-                    +   "</div>"
-                    + "</div>"
+                    + "<div class='item-top'><div class='food-name'>" + item.name + "</div>"
+                    + "<div class='amount-badges'>" + badges + "<span class='plate-pill " + itemClass + "'>🍽️ " + itemPct + "%</span></div></div>"
                     + "<div class='nutrient-pills'>" + pills + "</div>"
-                    // ✅ ปุ่มดูจานในแต่ละ item
-                    + "<div class='item-footer'>"
-                    + makePlateLink(item.name, amountGrams, itemPct, "btn-plate-sm", "🍽️ ดูรูปจาน")
-                    + "</div>"
+                    + "<div class='item-footer'>" + makePlateLink(item.name, amountGrams, itemPct, "btn-plate-sm", "🍽️ ดูรูปจาน") + "</div>"
                     + "</div>";
             });
 
             resultDiv.innerHTML = html;
-
         } catch(e) {
             resultDiv.innerHTML = "<p class='error-text'>เชื่อมต่อ Server ไม่ได้</p>";
         }
     }
+
+    // ===== Add Food =====
+    function openPasswordModal() {
+        var name = document.getElementById("addName").value.trim();
+        if (!name) { document.getElementById("addResult").innerHTML = "<p class='error-text'>กรุณากรอกชื่ออาหาร</p>"; return; }
+        document.getElementById("passwordInput").value = "";
+        document.getElementById("modalError").style.display = "none";
+        document.getElementById("modalOverlay").classList.add("show");
+        setTimeout(function() { document.getElementById("passwordInput").focus(); }, 100);
+    }
+
+    function closeModal() {
+        document.getElementById("modalOverlay").classList.remove("show");
+    }
+
+    async function confirmAdd() {
+        var password = document.getElementById("passwordInput").value;
+        if (!password) return;
+
+        var payload = {
+            password: password,
+            name:     document.getElementById("addName").value.trim(),
+            category: document.getElementById("addCategory").value,
+            calories: Number(document.getElementById("addCalories").value) || 0,
+            carbs:    Number(document.getElementById("addCarbs").value)    || 0,
+            protein:  Number(document.getElementById("addProtein").value)  || 0,
+            fat:      Number(document.getElementById("addFat").value)      || 0
+        };
+
+        try {
+            var response = await fetch(backend_uri + "/add-food", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+            var data = await response.json();
+
+            if (!response.ok || !data.success) {
+                if (response.status === 401) {
+                    document.getElementById("modalError").style.display = "block";
+                } else {
+                    closeModal();
+                    document.getElementById("addResult").innerHTML = "<p class='error-text'>" + (data.message || "เกิดข้อผิดพลาด") + "</p>";
+                }
+                return;
+            }
+
+            closeModal();
+            document.getElementById("addResult").innerHTML = "<p class='success-text'>✅ เพิ่ม <strong>" + payload.name + "</strong> สำเร็จแล้วครับ</p>";
+
+            // เคลียร์ฟอร์ม
+            ["addName","addCalories","addCarbs","addProtein","addFat"].forEach(function(id) {
+                document.getElementById(id).value = "";
+            });
+
+            // รีโหลด datalist
+            var dataList = document.getElementById("foodOptions");
+            var res = await fetch(backend_uri + "/foods");
+            var foods = await res.json();
+            dataList.innerHTML = "";
+            foods.forEach(function(food) {
+                var opt = document.createElement("option");
+                opt.value = food.name;
+                opt.textContent = "หมวด: " + food.category;
+                dataList.appendChild(opt);
+            });
+
+        } catch(e) {
+            closeModal();
+            document.getElementById("addResult").innerHTML = "<p class='error-text'>เชื่อมต่อ Server ไม่ได้</p>";
+        }
+    }
+
+    // ปิด modal เมื่อคลิกนอก
+    document.getElementById("modalOverlay").addEventListener("click", function(e) {
+        if (e.target === this) closeModal();
+    });
 </script>
 </body>
 </html>

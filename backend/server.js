@@ -18,26 +18,20 @@ mongoose.connect(MONGODB_URI)
 
 app.get('/', (req, res) => res.send("Welcome to Nutrient_exchange!"));
 
-// ✅ รายการ nutrientType ที่อนุญาต
 const ALLOWED_NUTRIENT_TYPES = ["calories", "carbs", "protein", "fat"];
 
 app.post("/exchange-food", async (req, res) => {
   try {
     const { foodName, amount, nutrientType } = req.body;
 
-    // ✅ เช็คว่าข้อมูลครบ
     if (!foodName || !amount || !nutrientType) {
       return res.status(400).json({ success: false, message: "กรุณาระบุข้อมูลให้ครบ" });
     }
-
-    // ✅ validate nutrientType ป้องกัน NaN
     if (!ALLOWED_NUTRIENT_TYPES.includes(nutrientType)) {
       return res.status(400).json({ success: false, message: "nutrientType ไม่ถูกต้อง" });
     }
 
     const baseFood = await Food.findOne({ name: foodName }).lean();
-
-    // ✅ เพิ่ม success: false ใน error response
     if (!baseFood) {
       return res.status(404).json({ success: false, message: "ไม่พบข้อมูลอาหารต้นแบบ" });
     }
@@ -52,7 +46,6 @@ app.post("/exchange-food", async (req, res) => {
     const enrichedExchanges = exchangeResults.map(result => {
       const foodDetail = targetFoods.find(f => f.name === result.name);
       if (!foodDetail) return result;
-
       const ratio = Number(result.amount) / 100;
       return {
         ...result,
@@ -77,7 +70,46 @@ app.post("/exchange-food", async (req, res) => {
 
   } catch (error) {
     console.error("Server Error:", error);
-    // ✅ เพิ่ม success: false ใน 500 error ด้วย
+    res.status(500).json({ success: false, message: "เกิดข้อผิดพลาดภายในระบบ" });
+  }
+});
+
+// ✅ Endpoint เพิ่มอาหาร
+app.post("/add-food", async (req, res) => {
+  try {
+    const { password, name, category, calories, carbs, protein, fat } = req.body;
+
+    // เช็ครหัสผ่าน
+    if (password !== process.env.ADD_FOOD_PASSWORD) {
+      return res.status(401).json({ success: false, message: "รหัสผ่านไม่ถูกต้อง" });
+    }
+
+    // เช็คข้อมูลครบ
+    if (!name || !category) {
+      return res.status(400).json({ success: false, message: "กรุณากรอกชื่อและหมวดหมู่" });
+    }
+
+    // เช็คชื่อซ้ำ
+    const existing = await Food.findOne({ name: name.trim() }).lean();
+    if (existing) {
+      return res.status(409).json({ success: false, message: "มีอาหารชื่อนี้ในฐานข้อมูลแล้ว" });
+    }
+
+    const newFood = new Food({
+      name:     name.trim(),
+      category: category.trim(),
+      calories: Number(calories) || 0,
+      carbs:    Number(carbs)    || 0,
+      protein:  Number(protein)  || 0,
+      fat:      Number(fat)      || 0
+    });
+
+    await newFood.save();
+
+    res.json({ success: true, message: "เพิ่มอาหารสำเร็จ", food: newFood });
+
+  } catch (error) {
+    console.error("Add Food Error:", error);
     res.status(500).json({ success: false, message: "เกิดข้อผิดพลาดภายในระบบ" });
   }
 });
@@ -87,7 +119,6 @@ app.get("/foods", async (req, res) => {
     const foods = await Food.find().lean();
     res.json(foods);
   } catch (error) {
-    // ✅ เพิ่ม error handling ให้ /foods ด้วย
     res.status(500).json({ success: false, message: "โหลดข้อมูลอาหารไม่สำเร็จ" });
   }
 });

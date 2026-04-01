@@ -24,39 +24,28 @@
             font-family: 'Sarabun', sans-serif;
             background: var(--cream);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             padding: 30px 20px;
             background-image:
                 radial-gradient(ellipse at 20% 20%, rgba(76,175,120,0.08) 0%, transparent 50%),
                 radial-gradient(ellipse at 80% 80%, rgba(45,122,79,0.06) 0%, transparent 50%);
         }
         .card {
-            background: white;
-            border-radius: 24px;
-            padding: 40px 44px;
-            width: 100%;
-            max-width: 580px;
+            background: white; border-radius: 24px; padding: 40px 44px;
+            width: 100%; max-width: 580px;
             box-shadow: 0 4px 6px var(--shadow), 0 20px 60px rgba(26,77,46,0.08), 0 0 0 1px rgba(200,230,212,0.6);
-            position: relative;
-            overflow: hidden;
+            position: relative; overflow: hidden;
         }
         .card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 4px;
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
             background: linear-gradient(90deg, var(--green-mid), var(--green-light), var(--green-mid));
         }
         .header { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
         .header-icon {
             width: 44px; height: 44px;
             background: linear-gradient(135deg, var(--green-mid), var(--green-light));
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px;
-            box-shadow: 0 4px 12px rgba(45,122,79,0.3);
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            font-size: 20px; box-shadow: 0 4px 12px rgba(45,122,79,0.3);
         }
         .header h1 { font-family: 'Prompt', sans-serif; font-size: 22px; font-weight: 600; color: var(--green-dark); letter-spacing: -0.3px; }
         .header p { font-size: 13px; color: var(--text-light); margin-top: 1px; }
@@ -64,8 +53,7 @@
         .field label { display: block; font-size: 13px; font-weight: 600; color: var(--text-mid); margin-bottom: 8px; letter-spacing: 0.3px; text-transform: uppercase; }
         .field label span { font-size: 11px; color: var(--text-light); font-weight: 400; text-transform: none; letter-spacing: 0; margin-left: 4px; }
         .input-base {
-            width: 100%; padding: 13px 16px;
-            border: 1.5px solid var(--border); border-radius: 12px;
+            width: 100%; padding: 13px 16px; border: 1.5px solid var(--border); border-radius: 12px;
             font-family: 'Sarabun', sans-serif; font-size: 15px; color: var(--text-dark);
             background: var(--cream); transition: all 0.2s ease; outline: none; appearance: none;
         }
@@ -75,8 +63,7 @@
         .amount-row .amount-input { flex: 1; }
         .unit-select-wrap { position: relative; width: 140px; flex-shrink: 0; }
         .unit-select-wrap select {
-            width: 100%; padding: 13px 36px 13px 14px;
-            border: 1.5px solid var(--border); border-radius: 12px;
+            width: 100%; padding: 13px 36px 13px 14px; border: 1.5px solid var(--border); border-radius: 12px;
             font-family: 'Sarabun', sans-serif; font-size: 14px; color: var(--text-dark);
             background: var(--cream); appearance: none; cursor: pointer; outline: none; transition: all 0.2s ease;
         }
@@ -84,8 +71,7 @@
         .unit-select-wrap::after { content: ''; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 6px solid var(--text-light); pointer-events: none; }
         .nutrient-select-wrap { position: relative; }
         .nutrient-select-wrap select {
-            width: 100%; padding: 13px 40px 13px 16px;
-            border: 1.5px solid var(--border); border-radius: 12px;
+            width: 100%; padding: 13px 40px 13px 16px; border: 1.5px solid var(--border); border-radius: 12px;
             font-family: 'Sarabun', sans-serif; font-size: 15px; color: var(--text-dark);
             background: var(--cream); appearance: none; cursor: pointer; outline: none; transition: all 0.2s ease;
         }
@@ -93,8 +79,7 @@
         .nutrient-select-wrap::after { content: ''; position: absolute; right: 16px; top: 50%; transform: translateY(-50%); width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 6px solid var(--text-light); pointer-events: none; }
         .display-units { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
         .unit-chip {
-            padding: 8px 16px; border-radius: 20px;
-            border: 1.5px solid var(--border); background: var(--cream);
+            padding: 8px 16px; border-radius: 20px; border: 1.5px solid var(--border); background: var(--cream);
             font-family: 'Sarabun', sans-serif; font-size: 14px; color: var(--text-mid);
             cursor: pointer; transition: all 0.2s ease; user-select: none;
         }
@@ -114,33 +99,67 @@
         .btn-calculate:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(26,77,46,0.4); }
         .btn-calculate:active { transform: translateY(0); }
         #result { margin-top: 24px; }
+
+        /* Result Header */
         .result-header { background: var(--green-pale); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; margin-bottom: 12px; }
         .result-header h3 { font-family: 'Prompt', sans-serif; font-size: 15px; font-weight: 600; color: var(--green-dark); margin-bottom: 4px; }
         .result-header p { font-size: 13px; color: var(--text-mid); }
 
-        /* ✅ Search bar ในผลลัพธ์ */
+        /* % จาน progress bar */
+        .plate-bar-wrap { margin-top: 10px; }
+        .plate-bar-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+        .plate-bar-label span { font-size: 12px; color: var(--text-mid); }
+        .plate-bar-label strong { font-size: 13px; }
+        .plate-status { font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 600; }
+        .plate-status.ok   { background: #e8f5ee; color: #2d7a4f; }
+        .plate-status.warn { background: #fff3e0; color: #e65100; }
+        .plate-status.over { background: #fdf0ed; color: #c0392b; }
+        .plate-bar-track { height: 8px; background: #eef7f2; border-radius: 99px; overflow: hidden; }
+        .plate-bar-fill { height: 100%; border-radius: 99px; transition: width 0.4s ease; }
+        .plate-bar-fill.ok   { background: linear-gradient(90deg, var(--green-mid), var(--green-light)); }
+        .plate-bar-fill.warn { background: linear-gradient(90deg, #ffa726, #ffcc02); }
+        .plate-bar-fill.over { background: linear-gradient(90deg, #ef5350, #ff7043); }
+
+        /* % จานใน exchange-item */
+        .plate-pill { font-size: 11px; padding: 3px 9px; border-radius: 6px; font-weight: 600; white-space: nowrap; }
+        .plate-pill.ok   { background: #e8f5ee; color: #2d7a4f; border: 1px solid #a8e6be; }
+        .plate-pill.warn { background: #fff3e0; color: #e65100; border: 1px solid #ffcc80; }
+        .plate-pill.over { background: #fdf0ed; color: #c0392b; border: 1px solid #f5c6be; }
+
+        /* ปุ่มดูจาน */
+        .btn-plate {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 7px 14px; background: white; border: 1.5px solid var(--green-mid);
+            border-radius: 10px; color: var(--green-dark);
+            font-family: 'Sarabun', sans-serif; font-size: 13px; font-weight: 600;
+            cursor: pointer; text-decoration: none; transition: all 0.2s ease;
+        }
+        .btn-plate:hover { background: var(--green-pale); }
+        .btn-plate-sm {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 5px 11px; background: white; border: 1.5px solid var(--border);
+            border-radius: 8px; color: var(--text-mid);
+            font-family: 'Sarabun', sans-serif; font-size: 12px; font-weight: 600;
+            cursor: pointer; text-decoration: none; transition: all 0.2s ease;
+        }
+        .btn-plate-sm:hover { border-color: var(--green-mid); color: var(--green-dark); background: var(--green-pale); }
+
+        /* Search */
         .result-search-wrap { position: relative; margin-bottom: 8px; }
         .result-search-wrap input {
-            width: 100%; padding: 10px 16px 10px 38px;
-            border: 1.5px solid var(--border); border-radius: 10px;
+            width: 100%; padding: 10px 16px 10px 38px; border: 1.5px solid var(--border); border-radius: 10px;
             font-family: 'Sarabun', sans-serif; font-size: 14px; color: var(--text-dark);
             background: var(--cream); outline: none; transition: all 0.2s ease;
         }
         .result-search-wrap input:focus { border-color: var(--green-mid); background: white; box-shadow: 0 0 0 4px rgba(45,122,79,0.08); }
         .result-search-wrap input::placeholder { color: #b8d4c0; }
-        .result-search-wrap::before {
-            content: '🔍';
-            position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
-            font-size: 13px; pointer-events: none;
-        }
+        .result-search-wrap::before { content: '🔍'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 13px; pointer-events: none; }
         .result-count { font-size: 12px; color: var(--text-light); margin-bottom: 10px; }
         .no-result-text { text-align: center; color: var(--text-light); font-size: 14px; padding: 16px; }
 
-        .result-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-light); margin: 16px 0 8px; }
         .exchange-item {
-            background: white; border: 1.5px solid var(--border);
-            border-radius: 12px; padding: 13px 16px; margin-bottom: 8px;
-            display: flex; flex-direction: column; transition: border-color 0.2s;
+            background: white; border: 1.5px solid var(--border); border-radius: 12px;
+            padding: 13px 16px; margin-bottom: 8px; display: flex; flex-direction: column; transition: border-color 0.2s;
         }
         .exchange-item:hover { border-color: var(--green-light); }
         .exchange-item.hidden { display: none; }
@@ -153,14 +172,9 @@
             padding: 4px 10px; border-radius: 8px; white-space: nowrap;
         }
         .nutrient-pills { display: flex; flex-wrap: wrap; gap: 6px; }
-        .nutrient-pill {
-            font-size: 11px; padding: 3px 9px; border-radius: 6px;
-            background: #f4f4f4; color: var(--text-mid); border: 1px solid #e0e0e0;
-        }
-        .nutrient-pill.highlight {
-            background: var(--green-pale); border-color: var(--green-glow);
-            color: var(--green-dark); font-weight: 700;
-        }
+        .nutrient-pill { font-size: 11px; padding: 3px 9px; border-radius: 6px; background: #f4f4f4; color: var(--text-mid); border: 1px solid #e0e0e0; }
+        .nutrient-pill.highlight { background: var(--green-pale); border-color: var(--green-glow); color: var(--green-dark); font-weight: 700; }
+        .item-footer { display: flex; justify-content: flex-end; margin-top: 8px; }
         .loading-text { text-align: center; color: var(--text-light); font-size: 14px; padding: 20px; }
         .error-text { color: #c0392b; background: #fdf0ed; border: 1px solid #f5c6be; border-radius: 10px; padding: 12px 16px; font-size: 14px; }
     </style>
@@ -177,8 +191,7 @@
 
     <div class="field">
         <label>อาหารต้นแบบ</label>
-        <input list="foodOptions" id="foodName" class="input-base"
-               placeholder="พิมพ์หรือเลือกชื่ออาหาร..." autocomplete="off">
+        <input list="foodOptions" id="foodName" class="input-base" placeholder="พิมพ์หรือเลือกชื่ออาหาร..." autocomplete="off">
         <datalist id="foodOptions"></datalist>
     </div>
 
@@ -213,21 +226,11 @@
     <div class="field">
         <label>แสดงผลเป็นหน่วย <span>เลือกได้หลายหน่วย</span></label>
         <div class="display-units">
-            <div class="unit-chip active" data-unit="g" onclick="toggleUnit(this)">
-                กรัม <span class="chip-sub">(g)</span>
-            </div>
-            <div class="unit-chip" data-unit="tsp" onclick="toggleUnit(this)">
-                ช้อนชา <span class="chip-sub">(5g)</span>
-            </div>
-            <div class="unit-chip" data-unit="tbsp" onclick="toggleUnit(this)">
-                ช้อนโต๊ะ <span class="chip-sub">(15g)</span>
-            </div>
-            <div class="unit-chip" data-unit="ladle" onclick="toggleUnit(this)">
-                ทัพพี <span class="chip-sub">(60g)</span>
-            </div>
-            <div class="unit-chip" data-unit="cup" onclick="toggleUnit(this)">
-                ถ้วยตวง <span class="chip-sub">(240g)</span>
-            </div>
+            <div class="unit-chip active" data-unit="g" onclick="toggleUnit(this)">กรัม <span class="chip-sub">(g)</span></div>
+            <div class="unit-chip" data-unit="tsp" onclick="toggleUnit(this)">ช้อนชา <span class="chip-sub">(5g)</span></div>
+            <div class="unit-chip" data-unit="tbsp" onclick="toggleUnit(this)">ช้อนโต๊ะ <span class="chip-sub">(15g)</span></div>
+            <div class="unit-chip" data-unit="ladle" onclick="toggleUnit(this)">ทัพพี <span class="chip-sub">(60g)</span></div>
+            <div class="unit-chip" data-unit="cup" onclick="toggleUnit(this)">ถ้วยตวง <span class="chip-sub">(240g)</span></div>
         </div>
     </div>
 
@@ -242,28 +245,34 @@
 
 <script>
     var backend_uri = "https://nutrient-exchange.vercel.app";
+    var PLATE_SIZE  = 600;
 
-    var unitToGram = {
-        g:     1,
-        tsp:   5,
-        tbsp:  15,
-        ladle: 60,
-        cup:   240
-    };
-
-    var unitLabel = {
-        g:     "g",
-        tsp:   "ช้อนชา",
-        tbsp:  "ช้อนโต๊ะ",
-        ladle: "ทัพพี",
-        cup:   "ถ้วยตวง"
-    };
+    var unitToGram = { g: 1, tsp: 5, tbsp: 15, ladle: 60, cup: 240 };
+    var unitLabel  = { g: "g", tsp: "ช้อนชา", tbsp: "ช้อนโต๊ะ", ladle: "ทัพพี", cup: "ถ้วยตวง" };
 
     function gramsToUnit(grams, unit) {
-        var factor = unitToGram[unit] || 1;
-        var val    = grams / factor;
+        var factor  = unitToGram[unit] || 1;
+        var val     = grams / factor;
         var display = (val % 1 === 0) ? val : parseFloat(val.toFixed(2));
         return display + " " + unitLabel[unit];
+    }
+
+    function platePercent(grams) {
+        return parseFloat(((grams / PLATE_SIZE) * 100).toFixed(1));
+    }
+    function plateClass(pct) {
+        if (pct > 100) return "over";
+        if (pct > 75)  return "warn";
+        return "ok";
+    }
+    function plateEmoji(pct) {
+        if (pct > 100) return "⚠️ เกินจาน";
+        if (pct > 75)  return "🟡 ใกล้เต็ม";
+        return "✅ พอดี";
+    }
+    function makePlateLink(name, amount, pct, cssClass, label) {
+        var params = encodeURIComponent(JSON.stringify({ name: name, amount: amount, percent: pct }));
+        return "<a href='plate.html?data=" + params + "' target='_blank' class='" + cssClass + "'>" + label + "</a>";
     }
 
     window.onload = async function() {
@@ -283,22 +292,15 @@
 
     function toggleUnit(el) { el.classList.toggle("active"); }
 
-    // ✅ ฟังก์ชัน filter รายการแลกเปลี่ยน
     function filterResults() {
         var keyword = document.getElementById("resultSearch").value.toLowerCase().trim();
         var items   = document.querySelectorAll(".exchange-item");
         var visible = 0;
-
         items.forEach(function(item) {
             var name = item.querySelector(".food-name").textContent.toLowerCase();
-            if (name.includes(keyword)) {
-                item.classList.remove("hidden");
-                visible++;
-            } else {
-                item.classList.add("hidden");
-            }
+            if (name.includes(keyword)) { item.classList.remove("hidden"); visible++; }
+            else { item.classList.add("hidden"); }
         });
-
         document.getElementById("resultCount").textContent = "แสดง " + visible + " รายการ";
         document.getElementById("noResultMsg").style.display = (visible === 0) ? "block" : "none";
     }
@@ -313,9 +315,7 @@
         if (!foodName) { alert("กรุณาเลือกหรือพิมพ์ชื่ออาหารก่อนครับ"); return; }
 
         var amountInGrams = amountRaw * (unitToGram[inputUnit] || 1);
-
-        var activeChips = Array.from(document.querySelectorAll(".unit-chip.active"))
-                               .map(function(c) { return c.dataset.unit; });
+        var activeChips   = Array.from(document.querySelectorAll(".unit-chip.active")).map(function(c) { return c.dataset.unit; });
 
         resultDiv.innerHTML = "<p class='loading-text'>กำลังคำนวณ...</p>";
 
@@ -335,22 +335,35 @@
             var origDisplay = amountRaw + " " + unitLabel[inputUnit]
                 + (inputUnit !== "g" ? " (= " + amountInGrams.toFixed(1) + " g)" : "");
 
-            var totalCount = data.exchanges.length;
+            var origPct   = platePercent(amountInGrams);
+            var origClass = plateClass(origPct);
+            var barWidth  = Math.min(origPct, 100);
 
-            // ✅ result-header + search bar + ตัวนับ
             var html = "<div class='result-header'>"
                 + "<h3>" + data.original.name + " &middot; " + origDisplay + "</h3>"
                 + "<p>" + data.original.nutrientType + ": <strong>" + data.original.totalNutrient + "</strong>"
                 + " &middot; หมวด: " + data.original.category + "</p>"
+                + "<div class='plate-bar-wrap'>"
+                +   "<div class='plate-bar-label'>"
+                +     "<span>🍽️ สัดส่วนจาน (600g/มื้อ)</span>"
+                +     "<div><strong>" + origPct + "%</strong> &nbsp;<span class='plate-status " + origClass + "'>" + plateEmoji(origPct) + "</span></div>"
+                +   "</div>"
+                +   "<div class='plate-bar-track'><div class='plate-bar-fill " + origClass + "' style='width:" + barWidth + "%'></div></div>"
+                + "</div>"
+                + "<div style='margin-top:10px'>"
+                + makePlateLink(data.original.name, amountInGrams, origPct, "btn-plate", "🍽️ ดูรูปจานอาหาร")
+                + "</div>"
                 + "</div>"
                 + "<div class='result-search-wrap'>"
                 +   "<input type='text' id='resultSearch' placeholder='ค้นหารายการแลกเปลี่ยน...' oninput='filterResults()'>"
                 + "</div>"
-                + "<div class='result-count' id='resultCount'>แสดง " + totalCount + " รายการ</div>"
+                + "<div class='result-count' id='resultCount'>แสดง " + data.exchanges.length + " รายการ</div>"
                 + "<div id='noResultMsg' class='no-result-text' style='display:none'>ไม่พบรายการที่ค้นหา</div>";
 
             data.exchanges.forEach(function(item) {
                 var amountGrams = Number(item.amount);
+                var itemPct     = platePercent(amountGrams);
+                var itemClass   = plateClass(itemPct);
 
                 var badges = "";
                 if (activeChips.length > 0) {
@@ -372,17 +385,22 @@
                     var isHighlight = (n.key === nutrientType);
                     var cls = "nutrient-pill" + (isHighlight ? " highlight" : "");
                     var v   = (n.val !== undefined && n.val !== null) ? n.val : "—";
-                    return "<span class='" + cls + "'>"
-                        + n.label + ": <strong>" + v + "</strong> " + n.unit
-                        + "</span>";
+                    return "<span class='" + cls + "'>" + n.label + ": <strong>" + v + "</strong> " + n.unit + "</span>";
                 }).join("");
 
                 html += "<div class='exchange-item'>"
                     + "<div class='item-top'>"
                     +   "<div class='food-name'>" + item.name + "</div>"
-                    +   "<div class='amount-badges'>" + badges + "</div>"
+                    +   "<div class='amount-badges'>"
+                    +     badges
+                    +     "<span class='plate-pill " + itemClass + "'>🍽️ " + itemPct + "%</span>"
+                    +   "</div>"
                     + "</div>"
                     + "<div class='nutrient-pills'>" + pills + "</div>"
+                    // ✅ ปุ่มดูจานในแต่ละ item
+                    + "<div class='item-footer'>"
+                    + makePlateLink(item.name, amountGrams, itemPct, "btn-plate-sm", "🍽️ ดูรูปจาน")
+                    + "</div>"
                     + "</div>";
             });
 

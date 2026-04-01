@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>จานอาหารของฉัน</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Prompt:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --green-dark: #1a4d2e;
+            --green-mid: #2d7a4f;
+            --green-light: #4caf78;
+            --green-pale: #e8f5ee;
+            --cream: #fafdf7;
+            --text-dark: #1a2e1f;
+            --text-mid: #3d5c45;
+            --text-light: #7aad88;
+            --border: #c8e6d4;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background: var(--cream);
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            padding: 30px 20px;
+        }
+        .card {
+            background: white; border-radius: 24px; padding: 36px 40px;
+            width: 100%; max-width: 420px;
+            box-shadow: 0 4px 6px rgba(26,77,46,0.12), 0 20px 60px rgba(26,77,46,0.08), 0 0 0 1px rgba(200,230,212,0.6);
+            position: relative; overflow: hidden; text-align: center;
+        }
+        .card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, var(--green-mid), var(--green-light), var(--green-mid));
+        }
+        h1 { font-family: 'Prompt', sans-serif; font-size: 20px; font-weight: 600; color: var(--green-dark); margin-bottom: 4px; }
+        .subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 28px; }
+        .plate-wrap { position: relative; width: 260px; height: 260px; margin: 0 auto 20px; }
+        .legend { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
+        .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-mid); }
+        .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+        .info-box {
+            background: var(--green-pale); border: 1px solid var(--border);
+            border-radius: 14px; padding: 16px 20px; margin-bottom: 16px; text-align: left;
+        }
+        .info-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 14px; }
+        .info-row:last-child { margin-bottom: 0; }
+        .info-label { color: var(--text-mid); }
+        .info-value { font-weight: 700; color: var(--green-dark); }
+        .status-badge { padding: 4px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; }
+        .status-ok   { background: #e8f5ee; color: #2d7a4f; }
+        .status-warn { background: #fff3e0; color: #e65100; }
+        .status-over { background: #fdf0ed; color: #c0392b; }
+        /* ✅ ปุ่มกลับหน้าหลัก — ลิงก์ตรงไม่ใช้ history.back() */
+        .btn-back {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 10px 20px; background: var(--green-mid); color: white;
+            border: none; border-radius: 12px; font-family: 'Sarabun', sans-serif;
+            font-size: 14px; font-weight: 600; cursor: pointer; text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .btn-back:hover { background: var(--green-dark); }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>🍽️ จานอาหารของฉัน</h1>
+    <p class="subtitle">เปรียบเทียบสัดส่วนกับจานมาตรฐาน 600g</p>
+
+    <div class="plate-wrap">
+        <svg id="plateSvg" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg" width="260" height="260"></svg>
+    </div>
+
+    <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#4caf78"></div>อาหารของคุณ</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#e8f5ee;border:1px solid #c8e6d4"></div>ส่วนที่เหลือ</div>
+    </div>
+
+    <div class="info-box" id="infoBox"></div>
+
+    <!-- ✅ ลิงก์ตรงไปหน้าหลัก ไม่ใช้ history.back() -->
+    <a href="index.html" class="btn-back">← กลับหน้าหลัก</a>
+</div>
+
+<script>
+    var PLATE_SIZE = 600;
+
+    var params = {};
+    try {
+        var raw = new URLSearchParams(window.location.search).get("data");
+        if (raw) params = JSON.parse(decodeURIComponent(raw));
+    } catch(e) {}
+
+    var foodName = params.name    || "อาหาร";
+    var amount   = Number(params.amount  || 0);
+    var pct      = Number(params.percent || parseFloat(((amount / PLATE_SIZE) * 100).toFixed(1)));
+    var filled   = Math.min(pct, 100);
+
+    // วาด SVG
+    var svg = document.getElementById("plateSvg");
+    var cx = 130, cy = 130, r = 110, rInner = 28;
+
+    function polarToCartesian(cx, cy, r, angleDeg) {
+        var rad = (angleDeg - 90) * Math.PI / 180;
+        return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+    }
+    function describeArc(cx, cy, r, startAngle, endAngle) {
+        var s = polarToCartesian(cx, cy, r, startAngle);
+        var e = polarToCartesian(cx, cy, r, endAngle);
+        var largeArc = (endAngle - startAngle) > 180 ? 1 : 0;
+        return "M " + cx + " " + cy + " L " + s.x + " " + s.y + " A " + r + " " + r + " 0 " + largeArc + " 1 " + e.x + " " + e.y + " Z";
+    }
+    function makeSvgEl(tag, attrs) {
+        var el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+        Object.keys(attrs).forEach(function(k) { el.setAttribute(k, attrs[k]); });
+        return el;
+    }
+
+    var fillColor  = pct > 100 ? "#ef5350" : pct > 75 ? "#ffa726" : "#4caf78";
+    var textColor  = pct > 100 ? "#c0392b" : "#1a4d2e";
+    var sweepDeg   = filled * 3.6;
+
+    // วงแหวนนอก
+    svg.appendChild(makeSvgEl("circle", { cx: cx, cy: cy, r: r + 14, fill: "#eeeeee" }));
+    // พื้นจาน
+    svg.appendChild(makeSvgEl("circle", { cx: cx, cy: cy, r: r, fill: "#fafdf7" }));
+
+    // sector อาหาร
+    if (filled > 0 && filled < 100) {
+        svg.appendChild(makeSvgEl("path", { d: describeArc(cx, cy, r, 0, sweepDeg), fill: fillColor, opacity: "0.85" }));
+    } else if (filled >= 100) {
+        svg.appendChild(makeSvgEl("circle", { cx: cx, cy: cy, r: r, fill: fillColor, opacity: "0.85" }));
+    }
+
+    // เส้นขอบ
+    svg.appendChild(makeSvgEl("circle", { cx: cx, cy: cy, r: r, fill: "none", stroke: "#c8e6d4", "stroke-width": "2" }));
+    // วงกลมกลาง
+    svg.appendChild(makeSvgEl("circle", { cx: cx, cy: cy, r: rInner, fill: "white" }));
+
+    // ข้อความ % กลางจาน
+    var textEl = makeSvgEl("text", {
+        x: cx, y: cy + 6,
+        "text-anchor": "middle",
+        "font-size": "17",
+        "font-weight": "700",
+        "font-family": "Sarabun, sans-serif",
+        fill: textColor
+    });
+    textEl.textContent = pct + "%";
+    svg.appendChild(textEl);
+
+    // ข้อมูลด้านล่าง
+    var statusClass = pct > 100 ? "status-over" : pct > 75 ? "status-warn" : "status-ok";
+    var statusText  = pct > 100 ? "⚠️ เกินจาน" : pct > 75 ? "🟡 ใกล้เต็ม" : "✅ พอดี";
+    var remaining   = Math.max(0, PLATE_SIZE - amount).toFixed(0);
+
+    document.getElementById("infoBox").innerHTML =
+        "<div class='info-row'><span class='info-label'>อาหาร</span><span class='info-value'>" + foodName + "</span></div>"
+      + "<div class='info-row'><span class='info-label'>ปริมาณ</span><span class='info-value'>" + amount + " g</span></div>"
+      + "<div class='info-row'><span class='info-label'>จานมาตรฐาน</span><span class='info-value'>" + PLATE_SIZE + " g</span></div>"
+      + "<div class='info-row'><span class='info-label'>สัดส่วน</span><span class='info-value'>" + pct + "%</span></div>"
+      + "<div class='info-row'><span class='info-label'>เหลือพื้นที่</span><span class='info-value'>" + remaining + " g</span></div>"
+      + "<div class='info-row'><span class='info-label'>สถานะ</span><span class='status-badge " + statusClass + "'>" + statusText + "</span></div>";
+</script>
+</body>
+</html>

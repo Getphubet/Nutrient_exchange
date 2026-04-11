@@ -1,5 +1,6 @@
-# PROJECT_CONTEXT.md
+# project-context.md
 ## ระบบแลกเปลี่ยนอาหาร (Nutrient Exchange System)
+*อัปเดตล่าสุด: April 2026*
 
 ---
 
@@ -13,12 +14,12 @@
 
 ---
 
-## ข้อมูล Credentials
+## Credentials
 
 | ชื่อ | ค่า |
 |------|-----|
 | ADD_FOOD_PASSWORD | capstoneG24 |
-| Unsplash Access Key | 3jtUCCNAF83XN-EMs-UN3ct3NVwZENaqLgW_NQUf8dU |
+| Unsplash Access Key | 3jtUCCNAF83XN-EMs-UN3ct3NVwZENaqLgW_NQUf8dU (ไม่ได้ใช้แล้ว) |
 
 ---
 
@@ -26,105 +27,44 @@
 
 ```
 Nutrient_exchange/
+├── project-context.md   ← ไฟล์นี้
 ├── frontend/
-│   ├── index.html      ← หน้าหลัก (แลกเปลี่ยน + เพิ่มอาหาร)
-│   └── plate.html      ← หน้าแสดงรูปอาหาร + สัดส่วนจาน
+│   ├── index.html       ← หน้าหลัก
+│   └── plate.html       ← หน้าแสดงสัดส่วนจาน (SVG)
 └── backend/
-    ├── server.js        ← Express server
+    ├── server.js
     ├── utils/
-    │   └── calculator.js ← คำนวณการแลกเปลี่ยน
+    │   └── calculator.js
     ├── models/
-    │   └── Food.js      ← MongoDB model
-    ├── vercel.json      ← config สำหรับ deploy บน Vercel
-    └── .env             ← environment variables (ไม่ push ขึ้น GitHub)
+    │   └── Food.js
+    ├── vercel.json
+    └── .env
 ```
 
 ---
 
-## Backend API Endpoints
+## Backend API
 
 | Method | Path | หน้าที่ |
 |--------|------|---------|
 | GET  | /foods | ดึงรายการอาหารทั้งหมด |
-| POST | /exchange-food | คำนวณการแลกเปลี่ยนอาหาร |
-| POST | /add-food | เพิ่มอาหารใหม่ (ต้องใช้รหัสผ่าน) |
+| POST | /exchange-food | คำนวณการแลกเปลี่ยน |
+| POST | /add-food | เพิ่มอาหาร (ต้องใช้รหัสผ่าน) |
 
-### Request body ของ /exchange-food
+### /exchange-food body
 ```json
-{
-  "foodName": "ข้าวขาวหุงสุก",
-  "amount": 100,
-  "nutrientType": "calories"
-}
+{ "foodName": "ข้าวขาวหุงสุก", "amount": 100, "nutrientType": "calories" }
 ```
 
-### Request body ของ /add-food
+### /add-food body
 ```json
 {
   "password": "capstoneG24",
   "name": "ข้าวกล้องหุงสุก",
   "category": "คาร์โบไฮเดรต",
-  "calories": 152,
-  "carbs": 34,
-  "protein": 2.8,
-  "fat": 0.3
+  "calories": 152, "carbs": 34, "protein": 2.8, "fat": 0.3
 }
 ```
-
----
-
-## Frontend Features
-
-### index.html
-- **Tab 1: แลกเปลี่ยนอาหาร**
-  - เลือกอาหารต้นแบบ (datalist จาก /foods)
-  - กรอกปริมาณ + เลือกหน่วย (g, ช้อนชา, ช้อนโต๊ะ, ทัพพี, ถ้วยตวง)
-  - เลือก nutrient ที่ต้องการแลกเปลี่ยน (calories, carbs, protein, fat)
-  - เลือกหน่วยที่ต้องการแสดงผล (เลือกได้หลายหน่วย)
-  - แสดง % สัดส่วนจาน (จาน 600g มาตรฐานนักโภชนาการ) พร้อม progress bar
-  - แต่ละ exchange item มีปุ่ม "ดูรูปจาน" → เปิด plate.html
-  - Search/filter รายการแลกเปลี่ยน
-
-- **Tab 2: เพิ่มอาหาร**
-  - กรอกชื่อ, หมวด (คาร์บ/โปรตีน/ไขมัน), สารอาหาร 4 ตัว
-  - กดเพิ่ม → popup ถามรหัสผ่าน → ส่งไป backend
-
-### plate.html
-- รับข้อมูลจาก localStorage (key: "plateData")
-- แสดงรูปอาหารจริงจาก Unsplash API (keyword mapping ไทย→อังกฤษ)
-- แสดง progress bar % ของจาน
-- แสดงตารางข้อมูล (ชื่อ, ปริมาณ, สัดส่วน, เหลือพื้นที่, สถานะ)
-
----
-
-## Logic สำคัญ
-
-### การแลกเปลี่ยนอาหาร (calculator.js)
-```
-baseNutrientValue = (baseFood[nutrientType] / 100) * amount
-exchangeAmount = baseNutrientValue / (target[nutrientType] / 100)
-```
-เรียงผลลัพธ์จากน้อยไปมาก
-
-### % สัดส่วนจาน
-```
-percent = (amountInGrams / 600) * 100
-≤75%  → สีเขียว ✅ พอดี
-76-100% → สีส้ม 🟡 ใกล้เต็ม
->100% → สีแดง ⚠️ เกินจาน
-```
-
-### การส่งข้อมูลไป plate.html
-ใช้ localStorage แทน URL parameter เพราะ Vercel serve ตัด query string
-```javascript
-localStorage.setItem("plateData", JSON.stringify({ name, amount, percent }));
-window.open("/plate.html", "_blank");
-```
-
-### Unsplash keyword mapping
-ชื่ออาหารไทย → ค้นหาเป็นภาษาอังกฤษ
-เช่น "ข้าว" → "steamed white rice bowl"
-เรียงจาก keyword ยาวไปสั้นเพื่อให้ได้คำที่ specific กว่าก่อน
 
 ---
 
@@ -142,19 +82,59 @@ ADD_FOOD_PASSWORD=capstoneG24
 
 ---
 
-## สิ่งที่แก้ไขตลอดบทสนทนา
+## Features ทั้งหมดใน index.html
 
-1. แก้ backend_uri ให้ชี้ถูก
-2. เพิ่ม success: false ใน error response ทุกตัว
-3. เพิ่ม validate nutrientType
-4. เพิ่ม sort ผลลัพธ์ใน calculator.js
-5. เพิ่ม error handling ใน /foods
-6. เพิ่ม tab เพิ่มอาหาร + modal รหัสผ่าน
-7. เพิ่ม % สัดส่วนจาน + progress bar
-8. เพิ่มปุ่มดูรูปจานในทุก item
-9. เพิ่ม search/filter รายการ
-10. เพิ่มรูปอาหารจริงจาก Unsplash ใน plate.html
-11. แก้การส่งข้อมูลจาก URL parameter → localStorage
+### Tab 1: แลกเปลี่ยนอาหาร
+- datalist ดึงจาก /foods
+- เลือกปริมาณ + หน่วย (g, ช้อนชา 5g, ช้อนโต๊ะ 15g, ทัพพี 60g, ถ้วยตวง 240g)
+- เลือก nutrient (calories, carbs, protein, fat)
+- เลือกหน่วยแสดงผลได้หลายหน่วย
+- แสดง % สัดส่วนจาน 600g พร้อม progress bar (สีเขียว/ส้ม/แดง)
+- ปุ่ม "ดูรูปจานอาหาร" → เปิด plate.html (ส่งข้อมูลผ่าน localStorage)
+- แต่ละ exchange item มีปุ่ม "ดูรูปจาน" เล็กๆ
+- Search/filter รายการ
+
+### Tab 2: เพิ่มอาหาร
+- กรอกชื่อ, หมวด (คาร์โบไฮเดรต/โปรตีน/ไขมัน), สารอาหาร 4 ตัว
+- กดเพิ่ม → popup modal ถามรหัสผ่าน
+- ถ้ารหัสผิดขึ้น error ใน modal
+- ถ้าถูกส่งไป /add-food แล้ว reload datalist
+
+---
+
+## plate.html (version ปัจจุบัน — SVG จาน)
+- **ไม่ใช้ Unsplash แล้ว** (ทดลองแล้วรูปไม่สื่อปริมาณ)
+- รับข้อมูลจาก localStorage key "plateData"
+- แสดง SVG จานกลม sector ตามสัดส่วน % จริง
+- สี: เขียว ≤75%, ส้ม 76-100%, แดง >100%
+- แสดงตาราง: ชื่ออาหาร, ปริมาณ, จานมาตรฐาน, สัดส่วน, เหลือพื้นที่, สถานะ
+- ปุ่มกลับหน้าหลัก → window.close()
+
+---
+
+## Logic สำคัญ
+
+### calculator.js
+```
+baseNutrientValue = (baseFood[nutrientType] / 100) * amount
+exchangeAmount = baseNutrientValue / (target[nutrientType] / 100)
+sort จากน้อยไปมาก
+```
+
+### % สัดส่วนจาน
+```
+percent = (amountInGrams / 600) * 100
+≤75%    → ok  → สีเขียว ✅
+76-100% → warn → สีส้ม  🟡
+>100%   → over → สีแดง  ⚠️
+```
+
+### การส่งข้อมูล index → plate
+```javascript
+// ใช้ localStorage เพราะ Vercel/serve ตัด query string
+localStorage.setItem("plateData", JSON.stringify({ name, amount, percent }));
+window.open("/plate.html", "_blank");
+```
 
 ---
 
@@ -162,12 +142,38 @@ ADD_FOOD_PASSWORD=capstoneG24
 ```bash
 # Backend
 cd backend
-node server.js  # รันที่ localhost:8000
+node server.js       # localhost:8000
 
 # Frontend
 cd frontend
-npx serve .     # รันที่ localhost:3000
+npx serve .          # localhost:3000
 ```
 
 ---
-*สร้างเมื่อ April 2026 — ใช้วาง context ให้ Claude ในแชทใหม่*
+
+## สิ่งที่ทดลองแล้วไม่ใช้
+
+### Unsplash API (ทดลองแล้วยกเลิก)
+- ลอง integrate แล้วแต่รูปไม่สื่อปริมาณ
+- 100g กับ 200g ดูเหมือนกัน
+- ตัดสินใจกลับมาใช้ SVG จานแทน
+
+### วิธีอื่นที่พิจารณาแล้วไม่ทำ
+- ถ่ายรูปเอง → ต้องถ่ายหลายพันรูป ไม่ practical
+- AI Image Generation → ค่า API สูง, รูปไม่แม่นยำ, อาหารไทยไม่ accurate
+
+---
+
+## แผนงานที่ยังค้างอยู่
+- ทำ Poster A0 (Portrait) สำหรับนำเสนอโปรเจกต์ (รอข้อมูลจาก user)
+- เขียนสคริปต์พรีเซนต์
+
+---
+
+## หมายเหตุสำหรับ Claude
+- user เป็นนักศึกษา ทำโปรเจกต์ capstone
+- ใช้ภาษาไทยตลอด
+- โปรเจกต์ deploy บน Vercel ทั้ง frontend และ backend
+- backend เป็น Express + MongoDB Atlas
+- frontend เป็น HTML/CSS/JS ล้วน (ไม่มี framework)
+- เวลาแก้โค้ดให้ทำไฟล์ใหม่มาให้เลย user ชอบแบบนั้น

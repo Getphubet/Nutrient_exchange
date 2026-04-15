@@ -49,8 +49,6 @@
         }
         .header h1 { font-family: 'Prompt', sans-serif; font-size: 22px; font-weight: 600; color: var(--green-dark); letter-spacing: -0.3px; }
         .header p { font-size: 13px; color: var(--text-light); margin-top: 1px; }
-
-        /* Tabs */
         .tabs { display: flex; gap: 4px; background: var(--green-pale); border-radius: 12px; padding: 4px; margin-bottom: 28px; }
         .tab-btn {
             flex: 1; padding: 9px; border: none; border-radius: 9px;
@@ -60,7 +58,6 @@
         .tab-btn.active { background: white; color: var(--green-dark); box-shadow: 0 2px 8px rgba(26,77,46,0.1); }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-
         .field { margin-bottom: 20px; }
         .field label { display: block; font-size: 13px; font-weight: 600; color: var(--text-mid); margin-bottom: 8px; letter-spacing: 0.3px; text-transform: uppercase; }
         .field label span { font-size: 11px; color: var(--text-light); font-weight: 400; text-transform: none; letter-spacing: 0; margin-left: 4px; }
@@ -111,44 +108,9 @@
         .btn-calculate:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(26,77,46,0.4); }
         .btn-calculate:active { transform: translateY(0); }
         #result { margin-top: 24px; }
-
-        /* Result */
         .result-header { background: var(--green-pale); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; margin-bottom: 12px; }
         .result-header h3 { font-family: 'Prompt', sans-serif; font-size: 15px; font-weight: 600; color: var(--green-dark); margin-bottom: 4px; }
         .result-header p { font-size: 13px; color: var(--text-mid); }
-        .plate-bar-wrap { margin-top: 10px; }
-        .plate-bar-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-        .plate-bar-label span { font-size: 12px; color: var(--text-mid); }
-        .plate-bar-label strong { font-size: 13px; }
-        .plate-status { font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 600; }
-        .plate-status.ok   { background: #e8f5ee; color: #2d7a4f; }
-        .plate-status.warn { background: #fff3e0; color: #e65100; }
-        .plate-status.over { background: #fdf0ed; color: #c0392b; }
-        .plate-bar-track { height: 8px; background: #eef7f2; border-radius: 99px; overflow: hidden; }
-        .plate-bar-fill { height: 100%; border-radius: 99px; transition: width 0.4s ease; }
-        .plate-bar-fill.ok   { background: linear-gradient(90deg, var(--green-mid), var(--green-light)); }
-        .plate-bar-fill.warn { background: linear-gradient(90deg, #ffa726, #ffcc02); }
-        .plate-bar-fill.over { background: linear-gradient(90deg, #ef5350, #ff7043); }
-        .plate-pill { font-size: 11px; padding: 3px 9px; border-radius: 6px; font-weight: 600; white-space: nowrap; }
-        .plate-pill.ok   { background: #e8f5ee; color: #2d7a4f; border: 1px solid #a8e6be; }
-        .plate-pill.warn { background: #fff3e0; color: #e65100; border: 1px solid #ffcc80; }
-        .plate-pill.over { background: #fdf0ed; color: #c0392b; border: 1px solid #f5c6be; }
-        .btn-plate {
-            display: inline-flex; align-items: center; gap: 6px; margin-top: 10px;
-            padding: 7px 14px; background: white; border: 1.5px solid var(--green-mid);
-            border-radius: 10px; color: var(--green-dark);
-            font-family: 'Sarabun', sans-serif; font-size: 13px; font-weight: 600;
-            cursor: pointer; text-decoration: none; transition: all 0.2s ease;
-        }
-        .btn-plate:hover { background: var(--green-pale); }
-        .btn-plate-sm {
-            display: inline-flex; align-items: center; gap: 5px;
-            padding: 5px 11px; background: white; border: 1.5px solid var(--border);
-            border-radius: 8px; color: var(--text-mid);
-            font-family: 'Sarabun', sans-serif; font-size: 12px; font-weight: 600;
-            cursor: pointer; text-decoration: none; transition: all 0.2s ease;
-        }
-        .btn-plate-sm:hover { border-color: var(--green-mid); color: var(--green-dark); background: var(--green-pale); }
         .result-search-wrap { position: relative; margin-bottom: 8px; }
         .result-search-wrap input {
             width: 100%; padding: 10px 16px 10px 38px; border: 1.5px solid var(--border); border-radius: 10px;
@@ -160,56 +122,45 @@
         .result-search-wrap::before { content: '🔍'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 13px; pointer-events: none; }
         .result-count { font-size: 12px; color: var(--text-light); margin-bottom: 10px; }
         .no-result-text { text-align: center; color: var(--text-light); font-size: 14px; padding: 16px; }
-        .exchange-item {
-            background: white; border: 1.5px solid var(--border); border-radius: 12px;
-            padding: 13px 16px; margin-bottom: 8px; display: flex; flex-direction: column; transition: border-color 0.2s;
-        }
+        .exchange-item { background: white; border: 1.5px solid var(--border); border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; transition: border-color 0.2s; }
         .exchange-item:hover { border-color: var(--green-light); }
         .exchange-item.hidden { display: none; }
-        .item-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; gap: 10px; }
-        .food-name { font-weight: 600; color: var(--text-dark); font-size: 15px; padding-top: 2px; }
-        .amount-badges { display: flex; flex-wrap: wrap; gap: 5px; justify-content: flex-end; }
-        .nutrient-badge {
-            background: var(--green-pale); border: 1px solid var(--green-glow);
-            color: var(--green-dark); font-size: 12px; font-weight: 600;
-            padding: 4px 10px; border-radius: 8px; white-space: nowrap;
+        .item-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 10px; }
+        .food-name { font-weight: 600; color: var(--text-dark); font-size: 15px; }
+        .btn-rate {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 5px 12px; background: white; border: 1.5px solid var(--border);
+            border-radius: 20px; color: var(--text-mid);
+            font-family: 'Sarabun', sans-serif; font-size: 13px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s ease; user-select: none;
         }
-        .nutrient-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+        .btn-rate:hover { border-color: var(--green-mid); color: var(--green-dark); background: var(--green-pale); }
+        .btn-rate.rated { border-color: var(--green-mid); background: var(--green-pale); color: var(--green-dark); }
+        .btn-rate .rate-count { font-size: 12px; color: var(--text-light); }
+        .rate-group { display: inline-flex; align-items: center; gap: 4px; }
+        .rate-count-mid { font-size: 13px; font-weight: 700; color: var(--green-dark); min-width: 24px; text-align: center; }
+        .nutrient-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
         .nutrient-pill { font-size: 11px; padding: 3px 9px; border-radius: 6px; background: #f4f4f4; color: var(--text-mid); border: 1px solid #e0e0e0; }
         .nutrient-pill.highlight { background: var(--green-pale); border-color: var(--green-glow); color: var(--green-dark); font-weight: 700; }
-        .item-footer { display: flex; justify-content: flex-end; margin-top: 8px; }
+        .amount-badges { display: flex; flex-wrap: wrap; gap: 5px; }
+        .nutrient-badge { background: var(--green-pale); border: 1px solid var(--green-glow); color: var(--green-dark); font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 8px; white-space: nowrap; }
+        .volume-section { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+        .volume-label { font-size: 11px; color: var(--text-light); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .volume-ratio-badge { font-size: 13px; font-weight: 700; color: var(--green-dark); background: var(--green-pale); border: 1px solid var(--green-glow); padding: 2px 8px; border-radius: 6px; }
+        .bowls-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
+        .nutrient-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .loading-text { text-align: center; color: var(--text-light); font-size: 14px; padding: 20px; }
         .error-text { color: #c0392b; background: #fdf0ed; border: 1px solid #f5c6be; border-radius: 10px; padding: 12px 16px; font-size: 14px; }
         .success-text { color: #2d7a4f; background: var(--green-pale); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; font-size: 14px; }
-
-        /* Add food tab */
-        .nutrient-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-        /* Password Modal */
-        .modal-overlay {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,0.4); z-index: 100;
-            align-items: center; justify-content: center;
-        }
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; align-items: center; justify-content: center; }
         .modal-overlay.show { display: flex; }
-        .modal {
-            background: white; border-radius: 20px; padding: 28px 32px;
-            width: 100%; max-width: 360px; box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-            position: relative;
-        }
+        .modal { background: white; border-radius: 20px; padding: 28px 32px; width: 100%; max-width: 360px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
         .modal h3 { font-family: 'Prompt', sans-serif; font-size: 17px; font-weight: 600; color: var(--green-dark); margin-bottom: 6px; }
         .modal p { font-size: 13px; color: var(--text-light); margin-bottom: 16px; }
-        .modal input {
-            width: 100%; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: 12px;
-            font-family: 'Sarabun', sans-serif; font-size: 15px; color: var(--text-dark);
-            background: var(--cream); outline: none; margin-bottom: 12px;
-        }
+        .modal input { width: 100%; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: 12px; font-family: 'Sarabun', sans-serif; font-size: 15px; color: var(--text-dark); background: var(--cream); outline: none; margin-bottom: 12px; }
         .modal input:focus { border-color: var(--green-mid); background: white; box-shadow: 0 0 0 4px rgba(45,122,79,0.08); }
         .modal-btns { display: flex; gap: 8px; }
-        .modal-btns button {
-            flex: 1; padding: 11px; border-radius: 12px; border: none;
-            font-family: 'Sarabun', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;
-        }
+        .modal-btns button { flex: 1; padding: 11px; border-radius: 12px; border: none; font-family: 'Sarabun', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
         .btn-confirm { background: var(--green-mid); color: white; }
         .btn-confirm:hover { background: var(--green-dark); }
         .btn-cancel { background: #f4f4f4; color: var(--text-mid); }
@@ -226,14 +177,11 @@
             <p>คำนวณและจัดการข้อมูลสารอาหาร</p>
         </div>
     </div>
-
-    <!-- Tabs -->
     <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('exchange')">🔄 แลกเปลี่ยนอาหาร</button>
-        <button class="tab-btn" onclick="switchTab('add')">➕ เพิ่มอาหาร</button>
+        <button class="tab-btn active" onclick="switchTab('exchange', this)">🔄 แลกเปลี่ยนอาหาร</button>
+        <button class="tab-btn" onclick="switchTab('add', this)">➕ เพิ่มอาหาร</button>
     </div>
 
-    <!-- Tab: แลกเปลี่ยนอาหาร -->
     <div id="tab-exchange" class="tab-content active">
         <div class="field">
             <label>อาหารต้นแบบ</label>
@@ -243,14 +191,14 @@
         <div class="field">
             <label>ปริมาณ <span>กรอกตัวเลขและเลือกหน่วย</span></label>
             <div class="amount-row">
-                <input type="number" id="amount" class="input-base amount-input" value="100" min="1" placeholder="100">
+                <input type="number" id="amount" class="input-base amount-input" value="100" min="0.1" step="0.1" placeholder="100">
                 <div class="unit-select-wrap">
                     <select id="amountUnit">
-                        <option value="g">กรัม (g)</option>
-                        <option value="tsp">ช้อนชา (5g)</option>
-                        <option value="tbsp">ช้อนโต๊ะ (15g)</option>
-                        <option value="ladle">ทัพพี (60g)</option>
-                        <option value="cup">ถ้วยตวง (240g)</option>
+                        <option value="g" selected>กรัม (g)</option>
+                        <option value="tsp">ช้อนชา (5ml)</option>
+                        <option value="tbsp">ช้อนโต๊ะ (15ml)</option>
+                        <option value="ladle">ทัพพี (60ml)</option>
+                        <option value="cup">ถ้วยตวง (240ml)</option>
                     </select>
                 </div>
             </div>
@@ -270,10 +218,10 @@
             <label>แสดงผลเป็นหน่วย <span>เลือกได้หลายหน่วย</span></label>
             <div class="display-units">
                 <div class="unit-chip active" data-unit="g" onclick="toggleUnit(this)">กรัม <span class="chip-sub">(g)</span></div>
-                <div class="unit-chip" data-unit="tsp" onclick="toggleUnit(this)">ช้อนชา <span class="chip-sub">(5g)</span></div>
-                <div class="unit-chip" data-unit="tbsp" onclick="toggleUnit(this)">ช้อนโต๊ะ <span class="chip-sub">(15g)</span></div>
-                <div class="unit-chip" data-unit="ladle" onclick="toggleUnit(this)">ทัพพี <span class="chip-sub">(60g)</span></div>
-                <div class="unit-chip" data-unit="cup" onclick="toggleUnit(this)">ถ้วยตวง <span class="chip-sub">(240g)</span></div>
+                <div class="unit-chip" data-unit="tsp" onclick="toggleUnit(this)">ช้อนชา <span class="chip-sub">(5ml)</span></div>
+                <div class="unit-chip" data-unit="tbsp" onclick="toggleUnit(this)">ช้อนโต๊ะ <span class="chip-sub">(15ml)</span></div>
+                <div class="unit-chip" data-unit="ladle" onclick="toggleUnit(this)">ทัพพี <span class="chip-sub">(60ml)</span></div>
+                <div class="unit-chip" data-unit="cup" onclick="toggleUnit(this)">ถ้วยตวง <span class="chip-sub">(240ml)</span></div>
             </div>
         </div>
         <div class="divider"></div>
@@ -281,7 +229,6 @@
         <div id="result"></div>
     </div>
 
-    <!-- Tab: เพิ่มอาหาร -->
     <div id="tab-add" class="tab-content">
         <div class="field">
             <label>ชื่ออาหาร</label>
@@ -306,13 +253,16 @@
                 <input type="number" id="addFat"      class="input-base" placeholder="ไขมัน (g)" min="0" step="0.1">
             </div>
         </div>
+        <div class="field">
+            <label>ปริมาตร <span>ml ต่อ 100g (ถ้าไม่รู้ใส่ 100)</span></label>
+            <input type="number" id="addVolume" class="input-base" placeholder="เช่น 163 (ข้าวสวย)" min="1" step="1" value="100">
+        </div>
         <div class="divider"></div>
         <button class="btn-calculate" onclick="openPasswordModal()">➕ เพิ่มอาหารลงฐานข้อมูล</button>
         <div id="addResult" style="margin-top:16px"></div>
     </div>
 </div>
 
-<!-- Password Modal -->
 <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
         <h3>🔒 ยืนยันตัวตน</h3>
@@ -327,34 +277,170 @@
 </div>
 
 <script>
-    var backend_uri = "https://nutrient-exchange.vercel.app";
-    var PLATE_SIZE  = 600;
+    var _host = window.location.hostname;
+    var backend_uri = (_host === "localhost" || _host === "127.0.0.1")
+        ? "http://localhost:8000"
+        : "https://nutrient-exchange.vercel.app";
 
-    var unitToGram = { g: 1, tsp: 5, tbsp: 15, ladle: 60, cup: 240 };
-    var unitLabel  = { g: "g", tsp: "ช้อนชา", tbsp: "ช้อนโต๊ะ", ladle: "ทัพพี", cup: "ถ้วยตวง" };
+    var unitToML  = { g: null, tsp: 5, tbsp: 15, ladle: 60, cup: 240 };
+    var unitLabel = { g: "g", tsp: "ช้อนชา", tbsp: "ช้อนโต๊ะ", ladle: "ทัพพี", cup: "ถ้วยตวง" };
 
-    function gramsToUnit(grams, unit) {
-        var factor  = unitToGram[unit] || 1;
-        var val     = grams / factor;
-        return ((val % 1 === 0) ? val : parseFloat(val.toFixed(2))) + " " + unitLabel[unit];
+    // ─── SVG ชามข้าว ────────────────────────────────────────────────
+    // ทรง: ปากกว้างมาก โค้งชันลงก้น ก้นแคบ มีฐานสี่เหลี่ยมเตี้ย
+    // Bowl dimensions
+    // padding รอบด้านเพื่อไม่ให้ขอบโดนตัด
+    var PX = 10; // padding ซ้าย-ขวา (เพราะ control point ดึงออกนอก)
+    var PT = 4;  // padding บน
+    var BW   = 120;  // ความกว้างปากชาม (ไม่รวม padding)
+    var BH   = 72;   // ความสูงชาม (ไม่รวมฐาน)
+    var BF   = 10;   // ความสูงฐาน
+    var BFW  = 36;   // ความกว้างฐาน
+    var BOT_L = PX + (BW - BFW) / 2;  // x ก้นซ้าย
+    var BOT_R = PX + (BW + BFW) / 2;  // x ก้นขวา
+    var SVG_W = BW + PX * 2;           // viewBox width รวม padding
+
+    // ปากชามอยู่บน (y=PT), ก้นชามอยู่ล่าง (y=PT+BH)
+    // control point ดึงออกด้านนอก แต่อยู่ใน viewBox เพราะมี PX
+    var BOWL_PATH = "M " + PX + "," + PT +
+        " Q " + (PX - 8) + "," + (PT + BH * 0.58).toFixed(1) + " " + BOT_L + "," + (PT + BH) +
+        " L " + BOT_R + "," + (PT + BH) +
+        " Q " + (PX + BW + 8) + "," + (PT + BH * 0.58).toFixed(1) + " " + (PX + BW) + "," + PT + " Z";
+
+    // physics: ชามโค้ง — width ที่ระดับ y (จากก้น)
+    // ประมาณ: width(y) = BFW + (BW - BFW) * (y/BH)^0.55
+    function bowlWidthAtY(y) {
+        return BFW + (BW - BFW) * Math.pow(y / BH, 0.55);
     }
-    function platePercent(g) { return parseFloat(((g / PLATE_SIZE) * 100).toFixed(1)); }
-    function plateClass(p)   { return p > 100 ? "over" : p > 75 ? "warn" : "ok"; }
-    function plateEmoji(p)   { return p > 100 ? "⚠️ เกินจาน" : p > 75 ? "🟡 ใกล้เต็ม" : "✅ พอดี"; }
-    function makePlateLink(name, amount, pct, cls, label) {
-        var params = encodeURIComponent(JSON.stringify({ name: name, amount: amount, percent: pct }));
-        return "<a href='plate.html?data=" + params + "' target='_blank' class='" + cls + "'>" + label + "</a>";
+
+    function bowlVolume(hFill) {
+        var steps = 200, vol = 0, dy = hFill / steps;
+        for (var i = 0; i < steps; i++) {
+            vol += bowlWidthAtY(i * dy + dy / 2) * dy;
+        }
+        return vol;
     }
 
-    // Tabs
-    function switchTab(tab) {
+    var V_TOTAL = bowlVolume(BH);
+
+    function fillHeightFraction(volFrac) {
+        if (volFrac <= 0) return 0;
+        if (volFrac >= 1) return 1;
+        var target = volFrac * V_TOTAL;
+        var lo = 0, hi = BH, mid;
+        for (var i = 0; i < 50; i++) {
+            mid = (lo + hi) / 2;
+            if (bowlVolume(mid) < target) lo = mid; else hi = mid;
+        }
+        return mid / BH;
+    }
+
+    function makeBowlSVG(volFrac, fillColor) {
+        volFrac = Math.max(0, Math.min(1, volFrac));
+        var hf    = fillHeightFraction(volFrac);
+        var fillH = BH * hf;          // ความสูงอาหารจากก้น
+        var fillY = PT + BH - fillH;   // y ผิวอาหาร
+        var fillW = bowlWidthAtY(fillH);
+        var fillX = (BW - fillW) / 2;
+
+        var SVG_H = PT + BH + BF + 4;
+        var ns = "http://www.w3.org/2000/svg";
+        var svg = document.createElementNS(ns, "svg");
+        svg.setAttribute("viewBox", "0 0 " + SVG_W + " " + SVG_H);
+        svg.setAttribute("width",  SVG_W);
+        svg.setAttribute("height", SVG_H);
+        svg.style.display = "block";
+
+        function el(tag, attrs) {
+            var e = document.createElementNS(ns, tag);
+            Object.keys(attrs).forEach(function(k) { e.setAttribute(k, attrs[k]); });
+            return e;
+        }
+
+        var clipId = "bc-" + Math.random().toString(36).slice(2);
+        var defs   = document.createElementNS(ns, "defs");
+        var clip   = document.createElementNS(ns, "clipPath");
+        clip.setAttribute("id", clipId);
+        var clipShape = document.createElementNS(ns, "path");
+        clipShape.setAttribute("d", BOWL_PATH);
+        clip.appendChild(clipShape);
+        defs.appendChild(clip);
+        svg.appendChild(defs);
+
+        // พื้นชาม
+        svg.appendChild(el("path", { d: BOWL_PATH, fill: "#e8f5ee", stroke: "none" }));
+
+        // อาหาร
+        if (fillH > 0.5) {
+            var water = el("rect", {
+                x: "0", y: fillY.toFixed(2),
+                width: SVG_W, height: (fillH + 2).toFixed(2),
+                fill: fillColor, opacity: "0.85"
+            });
+            water.setAttribute("clip-path", "url(#" + clipId + ")");
+            svg.appendChild(water);
+
+            // เส้นผิวอาหาร
+            svg.appendChild(el("line", {
+                x1: fillX.toFixed(1), y1: fillY.toFixed(2),
+                x2: (fillX + fillW).toFixed(1), y2: fillY.toFixed(2),
+                stroke: fillColor, "stroke-width": "1.2", opacity: "0.8"
+            }));
+        }
+
+        // ขอบชาม
+        svg.appendChild(el("path", { d: BOWL_PATH, fill: "none", stroke: "#2d7a4f", "stroke-width": "1.8" }));
+
+        // ฐานชาม
+        svg.appendChild(el("rect", {
+            x: BOT_L, y: (PT + BH),
+            width: BFW, height: BF,
+            rx: "2",
+            fill: volFrac >= 1 ? "#3d9e60" : "#d0ead8",
+            stroke: "#2d7a4f", "stroke-width": "1.5"
+        }));
+
+        return svg;
+    }
+
+    function makeBowlsRow(ratio, fillColor) {
+        if (!ratio || ratio <= 0) return null;
+        var container = document.createElement("div");
+        container.className = "bowls-row";
+
+        var full      = Math.floor(ratio);
+        var remainder = ratio - full;
+
+        for (var i = 0; i < full; i++) {
+            container.appendChild(makeBowlSVG(1, fillColor));
+        }
+        if (remainder > 0.02) {
+            container.appendChild(makeBowlSVG(remainder, fillColor));
+        }
+        if (ratio > 0 && ratio < 0.03) {
+            container.appendChild(makeBowlSVG(ratio, fillColor));
+        }
+        return container;
+    }
+
+    // ─── Utility ────────────────────────────────────────────────────
+    function gramsToUnitVolume(grams, unit, volumePer100g) {
+        if (unit === "g") return grams.toFixed(1) + " g";
+        var mlPerUnit = unitToML[unit];
+        var mlTotal   = (volumePer100g / 100) * grams;
+        var val       = mlTotal / mlPerUnit;
+        return parseFloat(val.toFixed(2)) + " " + unitLabel[unit];
+    }
+
+    function switchTab(tab, btn) {
         document.querySelectorAll(".tab-content").forEach(function(el) { el.classList.remove("active"); });
         document.querySelectorAll(".tab-btn").forEach(function(el) { el.classList.remove("active"); });
         document.getElementById("tab-" + tab).classList.add("active");
-        event.target.classList.add("active");
+        btn.classList.add("active");
     }
 
-    window.onload = async function() {
+    window.onload = async function() { await loadFoodOptions(); };
+
+    async function loadFoodOptions() {
         var dataList = document.getElementById("foodOptions");
         try {
             var res   = await fetch(backend_uri + "/foods");
@@ -363,11 +449,10 @@
             foods.forEach(function(food) {
                 var opt = document.createElement("option");
                 opt.value = food.name;
-                opt.textContent = "หมวด: " + food.category;
                 dataList.appendChild(opt);
             });
         } catch(e) { console.error("โหลดข้อมูลล้มเหลว:", e); }
-    };
+    }
 
     function toggleUnit(el) { el.classList.toggle("active"); }
 
@@ -385,20 +470,32 @@
     }
 
     async function calculateExchange() {
-        var foodName     = document.getElementById("foodName").value;
-        var amountRaw    = Number(document.getElementById("amount").value);
+        var foodName     = document.getElementById("foodName").value.trim();
+        var amountRaw    = parseFloat(document.getElementById("amount").value);
         var inputUnit    = document.getElementById("amountUnit").value;
         var nutrientType = document.getElementById("nutrientType").value;
         var resultDiv    = document.getElementById("result");
 
         if (!foodName) { alert("กรุณาเลือกหรือพิมพ์ชื่ออาหารก่อนครับ"); return; }
-
-        var amountInGrams = amountRaw * (unitToGram[inputUnit] || 1);
-        var activeChips   = Array.from(document.querySelectorAll(".unit-chip.active")).map(function(c) { return c.dataset.unit; });
+        if (!amountRaw || amountRaw <= 0) { alert("กรุณาระบุปริมาณที่ถูกต้อง"); return; }
 
         resultDiv.innerHTML = "<p class='loading-text'>กำลังคำนวณ...</p>";
+        var activeChips = Array.from(document.querySelectorAll(".unit-chip.active")).map(function(c) { return c.dataset.unit; });
 
         try {
+            var foodsRes = await fetch(backend_uri + "/foods");
+            var allFoods = await foodsRes.json();
+            var baseInfo = allFoods.find(function(f) { return f.name === foodName; });
+
+            var amountInGrams;
+            if (inputUnit === "g") {
+                amountInGrams = amountRaw;
+            } else {
+                var volPer100g = (baseInfo && baseInfo.volume) ? Number(baseInfo.volume) : 100;
+                var mlInput    = amountRaw * unitToML[inputUnit];
+                amountInGrams  = (mlInput / volPer100g) * 100;
+            }
+
             var response = await fetch(backend_uri + "/exchange-food", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -412,33 +509,35 @@
             }
 
             var origDisplay = amountRaw + " " + unitLabel[inputUnit]
-                + (inputUnit !== "g" ? " (= " + amountInGrams.toFixed(1) + " g)" : "");
-            var origPct   = platePercent(amountInGrams);
-            var origClass = plateClass(origPct);
-            var barWidth  = Math.min(origPct, 100);
+                + (inputUnit !== "g" ? " (≈ " + amountInGrams.toFixed(1) + " g)" : "");
 
             var html = "<div class='result-header'>"
-                + "<h3>" + data.original.name + " &middot; " + origDisplay + "</h3>"
-                + "<p>" + data.original.nutrientType + ": <strong>" + data.original.totalNutrient + "</strong> &middot; หมวด: " + data.original.category + "</p>"
-                + "<div class='plate-bar-wrap'>"
-                +   "<div class='plate-bar-label'><span>🍽️ สัดส่วนจาน (600g/มื้อ)</span>"
-                +   "<div><strong>" + origPct + "%</strong> &nbsp;<span class='plate-status " + origClass + "'>" + plateEmoji(origPct) + "</span></div></div>"
-                +   "<div class='plate-bar-track'><div class='plate-bar-fill " + origClass + "' style='width:" + barWidth + "%'></div></div>"
-                + "</div>"
-                + "<div style='margin-top:10px'>" + makePlateLink(data.original.name, amountInGrams, origPct, "btn-plate", "🍽️ ดูรูปจานอาหาร") + "</div>"
+                + "<h3>" + data.original.name + " · " + origDisplay + "</h3>"
+                + "<p>" + nutrientType + ": <strong>" + data.original.totalNutrient + "</strong>"
+                + " · หมวด: " + data.original.category + "</p>"
                 + "</div>"
                 + "<div class='result-search-wrap'><input type='text' id='resultSearch' placeholder='ค้นหารายการแลกเปลี่ยน...' oninput='filterResults()'></div>"
                 + "<div class='result-count' id='resultCount'>แสดง " + data.exchanges.length + " รายการ</div>"
                 + "<div id='noResultMsg' class='no-result-text' style='display:none'>ไม่พบรายการที่ค้นหา</div>";
 
-            data.exchanges.forEach(function(item) {
-                var amountGrams = Number(item.amount);
-                var itemPct     = platePercent(amountGrams);
-                var itemClass   = plateClass(itemPct);
+            resultDiv.innerHTML = html;
 
-                var badges = (activeChips.length > 0)
-                    ? activeChips.map(function(u) { return "<span class='nutrient-badge'>" + gramsToUnit(amountGrams, u) + "</span>"; }).join("")
-                    : "<span class='nutrient-badge'>" + amountGrams + " g</span>";
+            data.exchanges.forEach(function(item) {
+                var amountGrams  = Number(item.amount);
+                var ratio        = item.volumeRatio;
+                var points       = item.points || 0;
+
+                var itemFoodInfo = allFoods.find(function(f) { return f.name === item.name; });
+                var itemVol      = (itemFoodInfo && itemFoodInfo.volume) ? Number(itemFoodInfo.volume) : 100;
+
+                var badges = "";
+                if (activeChips.length > 0) {
+                    activeChips.forEach(function(u) {
+                        badges += "<span class='nutrient-badge'>" + gramsToUnitVolume(amountGrams, u, itemVol) + "</span>";
+                    });
+                } else {
+                    badges = "<span class='nutrient-badge'>" + amountGrams.toFixed(1) + " g</span>";
+                }
 
                 var pillDefs = [
                     { key: "calories", label: "Cal",     unit: "kcal", val: item.calories },
@@ -452,21 +551,76 @@
                     return "<span class='" + cls + "'>" + n.label + ": <strong>" + v + "</strong> " + n.unit + "</span>";
                 }).join("");
 
-                html += "<div class='exchange-item'>"
-                    + "<div class='item-top'><div class='food-name'>" + item.name + "</div>"
-                    + "<div class='amount-badges'>" + badges + "<span class='plate-pill " + itemClass + "'>🍽️ " + itemPct + "%</span></div></div>"
-                    + "<div class='nutrient-pills'>" + pills + "</div>"
-                    + "<div class='item-footer'>" + makePlateLink(item.name, amountGrams, itemPct, "btn-plate-sm", "🍽️ ดูรูปจาน") + "</div>"
+                var ratioLabel = ratio !== null ? ratio.toFixed(2) + "x" : "—";
+                var fillColor  = ratio > 1.5 ? "#ffa726" : ratio < 0.7 ? "#64b5f6" : "#4caf78";
+
+                var itemEl = document.createElement("div");
+                itemEl.className = "exchange-item";
+                itemEl.innerHTML =
+                    "<div class='item-top'>"
+                    +   "<div class='food-name'>" + item.name + "</div>"
+                    +   "<div class='rate-group'>"
+                    +     "<button class='btn-rate btn-uprate' onclick='rateFood(\"" + item.name.replace(/"/g,'&quot;') + "\", this)'>👍</button>"
+                    +     "<button class='btn-rate btn-disrate' onclick='unrateFood(\"" + item.name.replace(/"/g,'&quot;') + "\", this)'>👎</button>"
+                    +     "<span class='rate-count-mid'>" + points + "</span>"
+                    +   "</div>"
+                    + "</div>"
+                    + "<div class='amount-badges'>" + badges + "</div>"
+                    + "<div class='nutrient-pills' style='margin-top:8px'>" + pills + "</div>"
+                    + "<div class='volume-section'>"
+                    +   "<div class='volume-label'>ปริมาตรเทียบกับต้นแบบ <span class='volume-ratio-badge'>" + ratioLabel + "</span></div>"
                     + "</div>";
+
+                if (ratio !== null && ratio > 0) {
+                    var bowlsRow = makeBowlsRow(ratio, fillColor);
+                    if (bowlsRow) itemEl.querySelector(".volume-section").appendChild(bowlsRow);
+                }
+
+                resultDiv.appendChild(itemEl);
             });
 
-            resultDiv.innerHTML = html;
         } catch(e) {
+            console.error(e);
             resultDiv.innerHTML = "<p class='error-text'>เชื่อมต่อ Server ไม่ได้</p>";
         }
     }
 
-    // ===== Add Food =====
+    async function rateFood(foodName, btn) {
+        try {
+            var res  = await fetch(backend_uri + "/rate-food", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ foodName: foodName })
+            });
+            var data = await res.json();
+            if (data.success) {
+                var group = btn.closest(".rate-group");
+                // reset ทุกปุ่มก่อน แล้ว active แค่ปุ่มนี้
+                group.querySelectorAll(".btn-rate").forEach(function(b) { b.classList.remove("rated"); });
+                btn.classList.add("rated");
+                group.querySelector(".rate-count-mid").textContent = data.points;
+            }
+        } catch(e) { console.error("Rate error:", e); }
+    }
+
+    async function unrateFood(foodName, btn) {
+        try {
+            var res = await fetch(backend_uri + "/unrate-food", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ foodName: foodName })
+            });
+            var data = await res.json();
+            if (data.success) {
+                var group = btn.closest(".rate-group");
+                // reset ทุกปุ่มก่อน แล้ว active แค่ปุ่มนี้
+                group.querySelectorAll(".btn-rate").forEach(function(b) { b.classList.remove("rated"); });
+                btn.classList.add("rated");
+                group.querySelector(".rate-count-mid").textContent = data.points;
+            }
+        } catch(e) { console.error("Unrate error:", e); }
+    }
+
     function openPasswordModal() {
         var name = document.getElementById("addName").value.trim();
         if (!name) { document.getElementById("addResult").innerHTML = "<p class='error-text'>กรุณากรอกชื่ออาหาร</p>"; return; }
@@ -476,14 +630,11 @@
         setTimeout(function() { document.getElementById("passwordInput").focus(); }, 100);
     }
 
-    function closeModal() {
-        document.getElementById("modalOverlay").classList.remove("show");
-    }
+    function closeModal() { document.getElementById("modalOverlay").classList.remove("show"); }
 
     async function confirmAdd() {
         var password = document.getElementById("passwordInput").value;
         if (!password) return;
-
         var payload = {
             password: password,
             name:     document.getElementById("addName").value.trim(),
@@ -491,9 +642,9 @@
             calories: Number(document.getElementById("addCalories").value) || 0,
             carbs:    Number(document.getElementById("addCarbs").value)    || 0,
             protein:  Number(document.getElementById("addProtein").value)  || 0,
-            fat:      Number(document.getElementById("addFat").value)      || 0
+            fat:      Number(document.getElementById("addFat").value)      || 0,
+            volume:   Number(document.getElementById("addVolume").value)   || 100
         };
-
         try {
             var response = await fetch(backend_uri + "/add-food", {
                 method: "POST",
@@ -501,7 +652,6 @@
                 body: JSON.stringify(payload)
             });
             var data = await response.json();
-
             if (!response.ok || !data.success) {
                 if (response.status === 401) {
                     document.getElementById("modalError").style.display = "block";
@@ -511,34 +661,17 @@
                 }
                 return;
             }
-
             closeModal();
             document.getElementById("addResult").innerHTML = "<p class='success-text'>✅ เพิ่ม <strong>" + payload.name + "</strong> สำเร็จแล้วครับ</p>";
-
-            // เคลียร์ฟอร์ม
-            ["addName","addCalories","addCarbs","addProtein","addFat"].forEach(function(id) {
-                document.getElementById(id).value = "";
-            });
-
-            // รีโหลด datalist
-            var dataList = document.getElementById("foodOptions");
-            var res = await fetch(backend_uri + "/foods");
-            var foods = await res.json();
-            dataList.innerHTML = "";
-            foods.forEach(function(food) {
-                var opt = document.createElement("option");
-                opt.value = food.name;
-                opt.textContent = "หมวด: " + food.category;
-                dataList.appendChild(opt);
-            });
-
+            ["addName","addCalories","addCarbs","addProtein","addFat"].forEach(function(id) { document.getElementById(id).value = ""; });
+            document.getElementById("addVolume").value = "100";
+            await loadFoodOptions();
         } catch(e) {
             closeModal();
             document.getElementById("addResult").innerHTML = "<p class='error-text'>เชื่อมต่อ Server ไม่ได้</p>";
         }
     }
 
-    // ปิด modal เมื่อคลิกนอก
     document.getElementById("modalOverlay").addEventListener("click", function(e) {
         if (e.target === this) closeModal();
     });

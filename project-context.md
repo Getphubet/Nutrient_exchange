@@ -19,7 +19,6 @@
 | ชื่อ | ค่า |
 |------|-----|
 | ADD_FOOD_PASSWORD | capstoneG24 |
-| Unsplash Access Key | 3jtUCCNAF83XN-EMs-UN3ct3NVwZENaqLgW_NQUf8dU (ไม่ได้ใช้แล้ว) |
 
 ---
 
@@ -29,8 +28,7 @@
 Nutrient_exchange/
 ├── project-context.md   ← ไฟล์นี้
 ├── frontend/
-│   ├── index.html       ← หน้าหลัก
-│   └── plate.html       ← หน้าแสดงสัดส่วนจาน (SVG)
+│   └── index.html       ← หน้าหลัก (plate.html ถูกลบออกแล้ว)
 └── backend/
     ├── server.js
     ├── utils/
@@ -50,11 +48,14 @@ Nutrient_exchange/
 | GET  | /foods | ดึงรายการอาหารทั้งหมด |
 | POST | /exchange-food | คำนวณการแลกเปลี่ยน |
 | POST | /add-food | เพิ่มอาหาร (ต้องใช้รหัสผ่าน) |
+| POST | /rate-food | กด 👍 +1 point |
+| POST | /unrate-food | กด 👎 -1 point (ติดลบได้) |
 
 ### /exchange-food body
 ```json
 { "foodName": "ข้าวขาวหุงสุก", "amount": 100, "nutrientType": "calories" }
 ```
+หมายเหตุ: `amount` เป็นกรัมเสมอ frontend แปลงหน่วยก่อนส่ง
 
 ### /add-food body
 ```json
@@ -62,8 +63,14 @@ Nutrient_exchange/
   "password": "capstoneG24",
   "name": "ข้าวกล้องหุงสุก",
   "category": "คาร์โบไฮเดรต",
-  "calories": 152, "carbs": 34, "protein": 2.8, "fat": 0.3
+  "calories": 152, "carbs": 34, "protein": 2.8, "fat": 0.3,
+  "volume": 163
 }
+```
+
+### /rate-food และ /unrate-food body
+```json
+{ "foodName": "ข้าวขาวหุงสุก" }
 ```
 
 ---
@@ -76,39 +83,22 @@ PORT=8000
 ADD_FOOD_PASSWORD=capstoneG24
 ```
 
-## Vercel Environment Variables (backend)
-- MONGODB_URI
-- ADD_FOOD_PASSWORD
-
 ---
 
-## Features ทั้งหมดใน index.html
+## Food Schema (MongoDB)
 
-### Tab 1: แลกเปลี่ยนอาหาร
-- datalist ดึงจาก /foods
-- เลือกปริมาณ + หน่วย (g, ช้อนชา 5g, ช้อนโต๊ะ 15g, ทัพพี 60g, ถ้วยตวง 240g)
-- เลือก nutrient (calories, carbs, protein, fat)
-- เลือกหน่วยแสดงผลได้หลายหน่วย
-- แสดง % สัดส่วนจาน 600g พร้อม progress bar (สีเขียว/ส้ม/แดง)
-- ปุ่ม "ดูรูปจานอาหาร" → เปิด plate.html (ส่งข้อมูลผ่าน localStorage)
-- แต่ละ exchange item มีปุ่ม "ดูรูปจาน" เล็กๆ
-- Search/filter รายการ
-
-### Tab 2: เพิ่มอาหาร
-- กรอกชื่อ, หมวด (คาร์โบไฮเดรต/โปรตีน/ไขมัน), สารอาหาร 4 ตัว
-- กดเพิ่ม → popup modal ถามรหัสผ่าน
-- ถ้ารหัสผิดขึ้น error ใน modal
-- ถ้าถูกส่งไป /add-food แล้ว reload datalist
-
----
-
-## plate.html (version ปัจจุบัน — SVG จาน)
-- **ไม่ใช้ Unsplash แล้ว** (ทดลองแล้วรูปไม่สื่อปริมาณ)
-- รับข้อมูลจาก localStorage key "plateData"
-- แสดง SVG จานกลม sector ตามสัดส่วน % จริง
-- สี: เขียว ≤75%, ส้ม 76-100%, แดง >100%
-- แสดงตาราง: ชื่ออาหาร, ปริมาณ, จานมาตรฐาน, สัดส่วน, เหลือพื้นที่, สถานะ
-- ปุ่มกลับหน้าหลัก → window.close()
+```javascript
+{
+  name:     String,   // ชื่ออาหาร
+  category: String,   // คาร์โบไฮเดรต / โปรตีน / ไขมัน
+  calories: Number,   // kcal ต่อ 100g
+  carbs:    Number,   // g ต่อ 100g
+  protein:  Number,   // g ต่อ 100g
+  fat:      Number,   // g ต่อ 100g
+  volume:   Number,   // ml ต่อ 100g (default 100) ← ใหม่
+  points:   Number,   // คะแนน rating (default 0) ← ใหม่
+}
+```
 
 ---
 
@@ -117,24 +107,57 @@ ADD_FOOD_PASSWORD=capstoneG24
 ### calculator.js
 ```
 baseNutrientValue = (baseFood[nutrientType] / 100) * amount
-exchangeAmount = baseNutrientValue / (target[nutrientType] / 100)
-sort จากน้อยไปมาก
+exchangeGrams = baseNutrientValue / (target[nutrientType] / 100)
+baseVolumeML = (baseFood.volume / 100) * amount
+targetVolumeML = (target.volume / 100) * exchangeGrams
+volumeRatio = targetVolumeML / baseVolumeML
 ```
 
-### % สัดส่วนจาน
+**การเรียงลำดับ:** points มากขึ้นก่อน → ถ้า points เท่ากันเรียงตามชื่อ (localeCompare th)
+
+### การแปลงหน่วย (frontend)
 ```
-percent = (amountInGrams / 600) * 100
-≤75%    → ok  → สีเขียว ✅
-76-100% → warn → สีส้ม  🟡
->100%   → over → สีแดง  ⚠️
+ช้อนชา  = 5 ml
+ช้อนโต๊ะ = 15 ml
+ทัพพี   = 60 ml
+ถ้วยตวง = 240 ml
+
+// แปลง ml-based unit → กรัม
+mlInput = amountRaw * unitToML[inputUnit]
+amountInGrams = (mlInput / food.volume) * 100
 ```
 
-### การส่งข้อมูล index → plate
-```javascript
-// ใช้ localStorage เพราะ Vercel/serve ตัด query string
-localStorage.setItem("plateData", JSON.stringify({ name, amount, percent }));
-window.open("/plate.html", "_blank");
-```
+### volumeRatio และรูปชาม
+- `volumeRatio` = ปริมาตรของอาหารที่แลกได้ หารด้วย ปริมาตรต้นแบบ
+- แสดงเป็นรูปชามข้าว SVG จำนวนชามตาม ratio เช่น 2.5x = ชามเต็ม 2 + ชามครึ่ง 1
+- ชามทรงปากกว้าง โค้งด้วย quadratic bezier มีฐานสี่เหลี่ยมเตี้ย
+- ระดับอาหารในชามใช้ physics จริง (width ไม่ linear ตามความสูง)
+- สีชาม: เขียว (ratio ≤ 1.5x), ส้ม (ratio > 1.5x), ฟ้า (ratio < 0.7x)
+
+---
+
+## Features ใน index.html
+
+### Tab 1: แลกเปลี่ยนอาหาร
+- datalist ดึงจาก /foods
+- ค่า default: 100 กรัม
+- เลือกปริมาณ + หน่วย (g, ช้อนชา 5ml, ช้อนโต๊ะ 15ml, ทัพพี 60ml, ถ้วยตวง 240ml)
+- เลือก nutrient (calories, carbs, protein, fat)
+- เลือกหน่วยแสดงผลได้หลายหน่วย (default: กรัม)
+- แสดงรูปชาม SVG ตาม volumeRatio
+- ปุ่ม 👍 👎 rating พร้อมแสดงคะแนน (toggle กัน)
+
+### Tab 2: เพิ่มอาหาร
+- กรอกชื่อ, หมวด, สารอาหาร 4 ตัว, **volume (ml/100g)**
+- กดเพิ่ม → popup modal ถามรหัสผ่าน
+
+---
+
+## Rating System
+- กด 👍 → POST /rate-food → points +1
+- กด 👎 → POST /unrate-food → points -1 (ติดลบได้ ไม่มีขีดจำกัด)
+- กดปุ่มใดปุ่มหนึ่ง อีกปุ่มจะ reset สีกลับ (toggle)
+- อาหารที่ points มากจะแสดงขึ้นก่อนในผลลัพธ์
 
 ---
 
@@ -145,27 +168,32 @@ cd backend
 node server.js       # localhost:8000
 
 # Frontend
-cd frontend
-npx serve .          # localhost:3000
+เปิดผ่าน Live Server ใน VS Code (localhost หรือ 127.0.0.1)
+```
+
+### การตรวจสอบ backend_uri (frontend)
+```javascript
+var _host = window.location.hostname;
+var backend_uri = (_host === "localhost" || _host === "127.0.0.1")
+    ? "http://localhost:8000"
+    : "https://nutrient-exchange.vercel.app";
 ```
 
 ---
 
-## สิ่งที่ทดลองแล้วไม่ใช้
-
-### Unsplash API (ทดลองแล้วยกเลิก)
-- ลอง integrate แล้วแต่รูปไม่สื่อปริมาณ
-- 100g กับ 200g ดูเหมือนกัน
-- ตัดสินใจกลับมาใช้ SVG จานแทน
-
-### วิธีอื่นที่พิจารณาแล้วไม่ทำ
-- ถ่ายรูปเอง → ต้องถ่ายหลายพันรูป ไม่ practical
-- AI Image Generation → ค่า API สูง, รูปไม่แม่นยำ, อาหารไทยไม่ accurate
+## สิ่งที่ทำแล้ว (April 2026)
+- เพิ่ม `volume` และ `points` field ใน Food schema
+- แก้ calculator.js คำนวณ volumeRatio และเรียงตาม points
+- เพิ่ม `/rate-food` และ `/unrate-food` endpoint
+- แก้ `/add-food` รับ volume ด้วย
+- ลบ plate.html ออก ไม่ใช้แล้ว
+- เปลี่ยน UI แสดงชาม SVG แทนจาน
+- ระบบ rating 👍 👎 toggle กัน
 
 ---
 
 ## แผนงานที่ยังค้างอยู่
-- ทำ Poster A0 (Portrait) สำหรับนำเสนอโปรเจกต์ (รอข้อมูลจาก user)
+- ทำ Poster A0 (Portrait) สำหรับนำเสนอโปรเจกต์
 - เขียนสคริปต์พรีเซนต์
 
 ---
@@ -177,3 +205,4 @@ npx serve .          # localhost:3000
 - backend เป็น Express + MongoDB Atlas
 - frontend เป็น HTML/CSS/JS ล้วน (ไม่มี framework)
 - เวลาแก้โค้ดให้ทำไฟล์ใหม่มาให้เลย user ชอบแบบนั้น
+- อย่าลืมว่า plate.html ถูกลบออกแล้ว ไม่มีในโปรเจกต์

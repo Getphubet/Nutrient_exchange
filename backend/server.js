@@ -20,6 +20,21 @@ app.get('/', (req, res) => res.send("Welcome to Nutrient_exchange!"));
 
 const ALLOWED_NUTRIENT_TYPES = ["calories", "carbs", "protein", "fat"];
 
+// ─────────────────────────────────────────
+// GET /foods — ดึงรายการอาหารทั้งหมด
+// ─────────────────────────────────────────
+app.get("/foods", async (req, res) => {
+  try {
+    const foods = await Food.find().lean();
+    res.json(foods);
+  } catch (error) {
+    res.status(500).json({ success: false, message: "โหลดข้อมูลอาหารไม่สำเร็จ" });
+  }
+});
+
+// ─────────────────────────────────────────
+// POST /exchange-food — คำนวณการแลกเปลี่ยน
+// ─────────────────────────────────────────
 app.post("/exchange-food", async (req, res) => {
   try {
     const { foodName, amount, nutrientType } = req.body;
@@ -56,6 +71,10 @@ app.post("/exchange-food", async (req, res) => {
       };
     });
 
+    // ปริมาตรต้นแบบ (ml) — ส่งไปให้ frontend ใช้แสดงผล
+    const baseVolumePer100g = Number(baseFood.volume) || 100;
+    const baseVolumeML      = (baseVolumePer100g / 100) * amount;
+
     res.json({
       success: true,
       original: {
@@ -63,7 +82,8 @@ app.post("/exchange-food", async (req, res) => {
         category:      baseFood.category,
         inputAmount:   Number(amount),
         totalNutrient: Number(((baseFood[nutrientType] / 100) * amount).toFixed(2)),
-        nutrientType:  nutrientType
+        nutrientType:  nutrientType,
+        volumeML:      Number(baseVolumeML.toFixed(2))
       },
       exchanges: enrichedExchanges
     });
@@ -74,22 +94,21 @@ app.post("/exchange-food", async (req, res) => {
   }
 });
 
-// ✅ Endpoint เพิ่มอาหาร
+// ─────────────────────────────────────────
+// POST /add-food — เพิ่มอาหาร (ต้องใช้รหัสผ่าน)
+// ─────────────────────────────────────────
 app.post("/add-food", async (req, res) => {
   try {
-    const { password, name, category, calories, carbs, protein, fat } = req.body;
+    const { password, name, category, calories, carbs, protein, fat, volume } = req.body;
 
-    // เช็ครหัสผ่าน
     if (password !== process.env.ADD_FOOD_PASSWORD) {
       return res.status(401).json({ success: false, message: "รหัสผ่านไม่ถูกต้อง" });
     }
 
-    // เช็คข้อมูลครบ
     if (!name || !category) {
       return res.status(400).json({ success: false, message: "กรุณากรอกชื่อและหมวดหมู่" });
     }
 
-    // เช็คชื่อซ้ำ
     const existing = await Food.findOne({ name: name.trim() }).lean();
     if (existing) {
       return res.status(409).json({ success: false, message: "มีอาหารชื่อนี้ในฐานข้อมูลแล้ว" });
@@ -101,11 +120,12 @@ app.post("/add-food", async (req, res) => {
       calories: Number(calories) || 0,
       carbs:    Number(carbs)    || 0,
       protein:  Number(protein)  || 0,
-      fat:      Number(fat)      || 0
+      fat:      Number(fat)      || 0,
+      volume:   Number(volume)   || 100,  // default 100 ml/100g ถ้าไม่ได้กรอก
+      points:   0
     });
 
     await newFood.save();
-
     res.json({ success: true, message: "เพิ่มอาหารสำเร็จ", food: newFood });
 
   } catch (error) {
@@ -114,12 +134,63 @@ app.post("/add-food", async (req, res) => {
   }
 });
 
-app.get("/foods", async (req, res) => {
+// ─────────────────────────────────────────
+// POST /rate-food — กด 👍 +1 คะแนนให้อาหาร
+// body: { "foodName": "ข้าวกล้องหุงสุก" }
+// ─────────────────────────────────────────
+app.post("/rate-food", async (req, res) => {
   try {
-    const foods = await Food.find().lean();
-    res.json(foods);
+    const { foodName } = req.body;
+
+    if (!foodName) {
+      return res.status(400).json({ success: false, message: "กรุณาระบุชื่ออาหาร" });
+    }
+
+    const food = await Food.findOneAndUpdate(
+      { name: foodName },
+      { $inc: { points: 1 } },
+      { new: true }
+    );
+
+    if (!food) {
+      return res.status(404).json({ success: false, message: "ไม่พบอาหารนี้ในฐานข้อมูล" });
+    }
+
+    res.json({ success: true, foodName: food.name, points: food.points });
+
   } catch (error) {
-    res.status(500).json({ success: false, message: "โหลดข้อมูลอาหารไม่สำเร็จ" });
+    console.error("Rate Food Error:", error);
+    res.status(500).json({ success: false, message: "เกิดข้อผิดพลาดภายในระบบ" });
+  }
+});
+
+// ─────────────────────────────────────────
+// POST /unrate-food — กด 👎 -1 คะแนน
+// body: { "foodName": "ข้าวกล้องหุงสุก" }
+// ─────────────────────────────────────────
+app.post("/unrate-food", async (req, res) => {
+  try {
+    const { foodName } = req.body;
+
+    if (!foodName) {
+      return res.status(400).json({ success: false, message: "กรุณาระบุชื่ออาหาร" });
+    }
+
+    const food = await Food.findOneAndUpdate(
+      { name: foodName },
+      { $inc: { points: -1 } },
+      { new: true }
+    );
+
+    if (!food) {
+      return res.status(404).json({ success: false, message: "ไม่พบอาหารนี้ในฐานข้อมูล" });
+    }
+
+    res.json({ success: true, foodName: food.name, points: food.points });
+
+  } catch (error) {
+    console.error("Unrate Food Error:", error);
+    res.status(500).json({ success: false, message: "เกิดข้อผิดพลาดภายในระบบ" });
   }
 });
 

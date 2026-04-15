@@ -1,21 +1,50 @@
+/**
+ * คำนวณการแลกเปลี่ยนอาหาร
+ *
+ * @param {Object} baseFood      - อาหารต้นแบบ (มี volume ml/100g)
+ * @param {number} amount        - ปริมาณต้นแบบ **หน่วยกรัม** (แปลงมาแล้วจาก frontend)
+ * @param {string} nutrientType  - "calories" | "carbs" | "protein" | "fat"
+ * @param {Array}  targetFoods   - รายการอาหารในหมวดเดียวกัน
+ */
 const calculateExchange = (baseFood, amount, nutrientType, targetFoods) => {
+    // สารอาหารที่ต้องการแลก (คำนวณจากกรัมจริง)
     const baseNutrientValue = (Number(baseFood[nutrientType]) / 100) * amount;
+
+    // ปริมาตรต้นแบบ (ml) — ใช้ volume/100g คูณกับกรัมที่ใส่
+    const baseVolumePer100g = Number(baseFood.volume) || 100;
+    const baseVolumeML      = (baseVolumePer100g / 100) * amount;
 
     return targetFoods
         .filter(target => Number(target[nutrientType]) > 0)
         .map(target => {
-            const exchangeAmount = baseNutrientValue / (Number(target[nutrientType]) / 100);
+            // กรัมที่ต้องใช้ของอาหารเป้าหมาย
+            const exchangeGrams = baseNutrientValue / (Number(target[nutrientType]) / 100);
+
+            // ปริมาตรของอาหารเป้าหมาย (ml)
+            const targetVolumePer100g = Number(target.volume) || 100;
+            const targetVolumeML      = (targetVolumePer100g / 100) * exchangeGrams;
+
+            // ratio ปริมาตร: อาหารที่แลกได้ เทียบกับ ต้นแบบที่ใส่ไป
+            const volumeRatio = baseVolumeML > 0
+                ? Number((targetVolumeML / baseVolumeML).toFixed(3))
+                : null;
 
             return {
                 name:          target.name,
-                amount:        Number(exchangeAmount.toFixed(2)),
+                amount:        Number(exchangeGrams.toFixed(2)),
                 unit:          "g",
                 nutrientValue: Number(baseNutrientValue.toFixed(2)),
-                type:          nutrientType
+                type:          nutrientType,
+                volumeML:      Number(targetVolumeML.toFixed(2)),
+                volumeRatio:   volumeRatio,
+                points:        Number(target.points) || 0
             };
         })
-        // ✅ เรียงจากปริมาณน้อย → มาก (ใกล้เคียงต้นแบบสุดอยู่บน)
-        .sort((a, b) => a.amount - b.amount);
+        // เรียง: points มากไว้บน → ถ้า points เท่ากัน เรียงตามชื่อ A→Z
+        .sort((a, b) => {
+            if (b.points !== a.points) return b.points - a.points;
+            return a.name.localeCompare(b.name, 'th');
+        });
 };
 
 module.exports = { calculateExchange };

@@ -95,8 +95,8 @@ ADD_FOOD_PASSWORD=capstoneG24
   carbs:    Number,   // g ต่อ 100g
   protein:  Number,   // g ต่อ 100g
   fat:      Number,   // g ต่อ 100g
-  volume:   Number,   // ml ต่อ 100g (default 100) ← ใหม่
-  points:   Number,   // คะแนน rating (default 0) ← ใหม่
+  volume:   Number,   // ml ต่อ 100g (default 100)
+  points:   Number,   // คะแนน rating (default 0)
 }
 ```
 
@@ -131,8 +131,15 @@ amountInGrams = (mlInput / food.volume) * 100
 - `volumeRatio` = ปริมาตรของอาหารที่แลกได้ หารด้วย ปริมาตรต้นแบบ
 - แสดงเป็นรูปชามข้าว SVG จำนวนชามตาม ratio เช่น 2.5x = ชามเต็ม 2 + ชามครึ่ง 1
 - ชามทรงปากกว้าง โค้งด้วย quadratic bezier มีฐานสี่เหลี่ยมเตี้ย
+- ขอบชามและฐานสีดำ (`#1a1a1a`)
+- ฐานชามทุกใบสีเขียวอ่อน (`#d0ead8`) เหมือนกันหมด
 - ระดับอาหารในชามใช้ physics จริง (width ไม่ linear ตามความสูง)
-- สีชาม: เขียว (ratio ≤ 1.5x), ส้ม (ratio > 1.5x), ฟ้า (ratio < 0.7x)
+- **สีชามล็อคตาม category:**
+  - 🔵 น้ำเงิน `#42a5f5` → คาร์โบไฮเดรต
+  - 🔴 แดง `#ef5350` → โปรตีน
+  - 🟡 เหลือง `#ffca28` → ไขมัน
+- padding รอบด้าน: `PX=10`, `PT=4` ป้องกันขอบโดนตัด
+- SVG dimensions: `BW=120, BH=72, BF=10, BFW=36, SVG_W=140`
 
 ---
 
@@ -144,11 +151,21 @@ amountInGrams = (mlInput / food.volume) * 100
 - เลือกปริมาณ + หน่วย (g, ช้อนชา 5ml, ช้อนโต๊ะ 15ml, ทัพพี 60ml, ถ้วยตวง 240ml)
 - เลือก nutrient (calories, carbs, protein, fat)
 - เลือกหน่วยแสดงผลได้หลายหน่วย (default: กรัม)
-- แสดงรูปชาม SVG ตาม volumeRatio
+- แสดงรูปชาม SVG ตาม volumeRatio สีตาม category
 - ปุ่ม 👍 👎 rating พร้อมแสดงคะแนน (toggle กัน)
+- ปุ่ม "+ ลงรายการ" บนแต่ละ exchange item
 
-### Tab 2: เพิ่มอาหาร
-- กรอกชื่อ, หมวด, สารอาหาร 4 ตัว, **volume (ml/100g)**
+### Tab 2: รายการอาหาร 🧺 ⚠️ optional — อาจารย์ไม่ได้ขอ
+- เพิ่มอาหารได้ 2 ทาง: กด "+ ลงรายการ" จากผลลัพธ์ หรือเลือกเองใน tab นี้
+- แสดงรายการอาหารที่เพิ่มแล้วพร้อมรูปชาม SVG สีตาม category
+- สรุปยอดรวม calories/carbs/protein/fat ทั้งหมด
+- ลบรายการได้ทีละอัน หรือล้างทั้งหมด
+- เก็บแค่ใน memory (หายเมื่อ refresh)
+- badge แสดงจำนวนรายการบน tab
+- ชามในหน้านี้เทียบกับ 240ml (1 ถ้วยตวง) เป็นหน่วยอ้างอิง
+
+### Tab 3: เพิ่มอาหาร
+- กรอกชื่อ, หมวด, สารอาหาร 4 ตัว, volume (ml/100g)
 - กดเพิ่ม → popup modal ถามรหัสผ่าน
 
 ---
@@ -182,13 +199,20 @@ var backend_uri = (_host === "localhost" || _host === "127.0.0.1")
 ---
 
 ## สิ่งที่ทำแล้ว (April 2026)
+
+### อาจารย์ขอ
 - เพิ่ม `volume` และ `points` field ใน Food schema
 - แก้ calculator.js คำนวณ volumeRatio และเรียงตาม points
 - เพิ่ม `/rate-food` และ `/unrate-food` endpoint
 - แก้ `/add-food` รับ volume ด้วย
 - ลบ plate.html ออก ไม่ใช้แล้ว
 - เปลี่ยน UI แสดงชาม SVG แทนจาน
+- สีชามล็อคตาม category (น้ำเงิน/แดง/เหลือง)
+- ขอบชามสีดำ ฐานชามสีเขียวอ่อนเหมือนกันทุกใบ
 - ระบบ rating 👍 👎 toggle กัน
+
+### ทำเพิ่มเป็น optional (อาจารย์ไม่ได้ขอ)
+- **Tab รายการอาหาร 🧺** — ตะกร้าอาหาร เพิ่ม/ลบรายการ สรุป macronutrient รวม เก็บใน memory เท่านั้น
 
 ---
 
@@ -205,4 +229,7 @@ var backend_uri = (_host === "localhost" || _host === "127.0.0.1")
 - backend เป็น Express + MongoDB Atlas
 - frontend เป็น HTML/CSS/JS ล้วน (ไม่มี framework)
 - เวลาแก้โค้ดให้ทำไฟล์ใหม่มาให้เลย user ชอบแบบนั้น
-- อย่าลืมว่า plate.html ถูกลบออกแล้ว ไม่มีในโปรเจกต์
+- plate.html ถูกลบออกแล้ว ไม่มีในโปรเจกต์
+- Tab รายการอาหาร เป็น optional ที่ทำเพิ่มเอง ไม่ใช่ requirement ของอาจารย์
+- window._allFoods เป็น cache ของข้อมูลอาหารทั้งหมดที่ fetch มา ใช้ได้ใน frontend
+- categoryColor() เป็นฟังก์ชันแปลง category string → hex color

@@ -52,7 +52,7 @@
         .tabs { display: flex; gap: 4px; background: var(--green-pale); border-radius: 12px; padding: 4px; margin-bottom: 28px; }
         .tab-btn {
             flex: 1; padding: 9px; border: none; border-radius: 9px;
-            font-family: 'Sarabun', sans-serif; font-size: 14px; font-weight: 600;
+            font-family: 'Sarabun', sans-serif; font-size: 13px; font-weight: 600;
             cursor: pointer; transition: all 0.2s ease; background: transparent; color: var(--text-mid);
         }
         .tab-btn.active { background: white; color: var(--green-dark); box-shadow: 0 2px 8px rgba(26,77,46,0.1); }
@@ -127,18 +127,27 @@
         .exchange-item.hidden { display: none; }
         .item-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 10px; }
         .food-name { font-weight: 600; color: var(--text-dark); font-size: 15px; }
+        .item-actions { display: flex; align-items: center; gap: 6px; }
         .btn-rate {
             display: inline-flex; align-items: center; gap: 5px;
-            padding: 5px 12px; background: white; border: 1.5px solid var(--border);
+            padding: 5px 10px; background: white; border: 1.5px solid var(--border);
             border-radius: 20px; color: var(--text-mid);
             font-family: 'Sarabun', sans-serif; font-size: 13px; font-weight: 600;
             cursor: pointer; transition: all 0.2s ease; user-select: none;
         }
         .btn-rate:hover { border-color: var(--green-mid); color: var(--green-dark); background: var(--green-pale); }
         .btn-rate.rated { border-color: var(--green-mid); background: var(--green-pale); color: var(--green-dark); }
-        .btn-rate .rate-count { font-size: 12px; color: var(--text-light); }
         .rate-group { display: inline-flex; align-items: center; gap: 4px; }
         .rate-count-mid { font-size: 13px; font-weight: 700; color: var(--green-dark); min-width: 24px; text-align: center; }
+        .btn-add-cart {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 5px 12px; background: var(--green-mid); border: none;
+            border-radius: 20px; color: white;
+            font-family: 'Sarabun', sans-serif; font-size: 13px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s ease; user-select: none;
+        }
+        .btn-add-cart:hover { background: var(--green-dark); }
+        .btn-add-cart.added { background: var(--green-pale); color: var(--green-dark); border: 1.5px solid var(--green-mid); }
         .nutrient-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
         .nutrient-pill { font-size: 11px; padding: 3px 9px; border-radius: 6px; background: #f4f4f4; color: var(--text-mid); border: 1px solid #e0e0e0; }
         .nutrient-pill.highlight { background: var(--green-pale); border-color: var(--green-glow); color: var(--green-dark); font-weight: 700; }
@@ -148,6 +157,62 @@
         .volume-label { font-size: 11px; color: var(--text-light); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
         .volume-ratio-badge { font-size: 13px; font-weight: 700; color: var(--green-dark); background: var(--green-pale); border: 1px solid var(--green-glow); padding: 2px 8px; border-radius: 6px; }
         .bowls-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
+
+        /* ─── Cart Tab ─── */
+        .cart-add-row { display: flex; gap: 8px; margin-bottom: 20px; align-items: flex-end; }
+        .cart-add-row .input-base { flex: 1; }
+        .cart-add-row .unit-select-wrap { width: 120px; }
+        .btn-cart-add {
+            padding: 13px 18px; background: var(--green-mid); color: white;
+            border: none; border-radius: 12px; font-family: 'Sarabun', sans-serif;
+            font-size: 15px; font-weight: 600; cursor: pointer; white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+        .btn-cart-add:hover { background: var(--green-dark); }
+        .cart-empty { text-align: center; color: var(--text-light); font-size: 14px; padding: 32px 0; }
+        .cart-item {
+            background: white; border: 1.5px solid var(--border); border-radius: 14px;
+            padding: 14px 16px; margin-bottom: 10px;
+        }
+        .cart-item-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .cart-item-name { font-weight: 600; color: var(--text-dark); font-size: 15px; }
+        .cart-item-amount { font-size: 13px; color: var(--text-mid); }
+        .btn-remove {
+            padding: 4px 10px; background: #fdf0ed; border: 1px solid #f5c6be;
+            border-radius: 8px; color: #c0392b; font-size: 12px; font-weight: 600;
+            cursor: pointer; font-family: 'Sarabun', sans-serif; transition: all 0.2s;
+        }
+        .btn-remove:hover { background: #f5c6be; }
+        .cart-item-pills { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+        .cart-summary {
+            background: var(--green-pale); border: 1.5px solid var(--border);
+            border-radius: 14px; padding: 16px 18px; margin-top: 16px;
+        }
+        .cart-summary h3 { font-family: 'Prompt', sans-serif; font-size: 15px; font-weight: 600; color: var(--green-dark); margin-bottom: 12px; }
+        .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .summary-item { background: white; border-radius: 10px; padding: 10px 14px; }
+        .summary-item .s-label { font-size: 11px; color: var(--text-light); margin-bottom: 2px; }
+        .summary-item .s-value { font-size: 18px; font-weight: 700; color: var(--green-dark); }
+        .summary-item .s-unit { font-size: 11px; color: var(--text-mid); }
+        .btn-clear-cart {
+            width: 100%; margin-top: 12px; padding: 11px;
+            background: #fdf0ed; border: 1px solid #f5c6be;
+            border-radius: 12px; color: #c0392b;
+            font-family: 'Sarabun', sans-serif; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .btn-clear-cart:hover { background: #f5c6be; }
+
+        /* cart badge on tab */
+        .cart-badge {
+            display: inline-flex; align-items: center; justify-content: center;
+            background: var(--green-mid); color: white;
+            font-size: 10px; font-weight: 700;
+            width: 16px; height: 16px; border-radius: 50%;
+            margin-left: 4px; vertical-align: middle;
+        }
+
+        /* Add food tab */
         .nutrient-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .loading-text { text-align: center; color: var(--text-light); font-size: 14px; padding: 20px; }
         .error-text { color: #c0392b; background: #fdf0ed; border: 1px solid #f5c6be; border-radius: 10px; padding: 12px 16px; font-size: 14px; }
@@ -178,10 +243,12 @@
         </div>
     </div>
     <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('exchange', this)">🔄 แลกเปลี่ยนอาหาร</button>
+        <button class="tab-btn active" onclick="switchTab('exchange', this)">🔄 แลกเปลี่ยน</button>
+        <button class="tab-btn" id="cart-tab-btn" onclick="switchTab('cart', this)">🧺 รายการ<span class="cart-badge" id="cartBadge" style="display:none">0</span></button>
         <button class="tab-btn" onclick="switchTab('add', this)">➕ เพิ่มอาหาร</button>
     </div>
 
+    <!-- Tab: แลกเปลี่ยนอาหาร -->
     <div id="tab-exchange" class="tab-content active">
         <div class="field">
             <label>อาหารต้นแบบ</label>
@@ -229,6 +296,30 @@
         <div id="result"></div>
     </div>
 
+    <!-- Tab: รายการอาหาร -->
+    <div id="tab-cart" class="tab-content">
+        <div class="field">
+            <label>เพิ่มอาหารลงรายการ</label>
+            <div class="cart-add-row">
+                <input list="foodOptions2" id="cartFoodName" class="input-base" placeholder="ชื่ออาหาร..." autocomplete="off">
+                <datalist id="foodOptions2"></datalist>
+                <input type="number" id="cartAmount" class="input-base" style="width:80px;flex:none" value="100" min="0.1" step="0.1">
+                <div class="unit-select-wrap">
+                    <select id="cartUnit">
+                        <option value="g" selected>กรัม</option>
+                        <option value="tsp">ช้อนชา</option>
+                        <option value="tbsp">ช้อนโต๊ะ</option>
+                        <option value="ladle">ทัพพี</option>
+                        <option value="cup">ถ้วยตวง</option>
+                    </select>
+                </div>
+                <button class="btn-cart-add" onclick="addToCartManual()">+ เพิ่ม</button>
+            </div>
+        </div>
+        <div id="cartList"><div class="cart-empty">ยังไม่มีรายการอาหารครับ<br>กด + เพิ่มอาหารจากผลลัพธ์ หรือเพิ่มด้านบน</div></div>
+    </div>
+
+    <!-- Tab: เพิ่มอาหาร -->
     <div id="tab-add" class="tab-content">
         <div class="field">
             <label>ชื่ออาหาร</label>
@@ -285,140 +376,208 @@
     var unitToML  = { g: null, tsp: 5, tbsp: 15, ladle: 60, cup: 240 };
     var unitLabel = { g: "g", tsp: "ช้อนชา", tbsp: "ช้อนโต๊ะ", ladle: "ทัพพี", cup: "ถ้วยตวง" };
 
-    // ─── SVG ชามข้าว ────────────────────────────────────────────────
-    // ทรง: ปากกว้างมาก โค้งชันลงก้น ก้นแคบ มีฐานสี่เหลี่ยมเตี้ย
-    // Bowl dimensions
-    // padding รอบด้านเพื่อไม่ให้ขอบโดนตัด
-    var PX = 10; // padding ซ้าย-ขวา (เพราะ control point ดึงออกนอก)
-    var PT = 4;  // padding บน
-    var BW   = 120;  // ความกว้างปากชาม (ไม่รวม padding)
-    var BH   = 72;   // ความสูงชาม (ไม่รวมฐาน)
-    var BF   = 10;   // ความสูงฐาน
-    var BFW  = 36;   // ความกว้างฐาน
-    var BOT_L = PX + (BW - BFW) / 2;  // x ก้นซ้าย
-    var BOT_R = PX + (BW + BFW) / 2;  // x ก้นขวา
-    var SVG_W = BW + PX * 2;           // viewBox width รวม padding
+    // ─── Cart (memory only) ──────────────────────────────────────────
+    var cart = []; // [{ name, amountGrams, calories, carbs, protein, fat, volumeML, volume }]
 
-    // ปากชามอยู่บน (y=PT), ก้นชามอยู่ล่าง (y=PT+BH)
-    // control point ดึงออกด้านนอก แต่อยู่ใน viewBox เพราะมี PX
+    function updateCartBadge() {
+        var badge = document.getElementById("cartBadge");
+        if (cart.length > 0) {
+            badge.style.display = "inline-flex";
+            badge.textContent = cart.length;
+        } else {
+            badge.style.display = "none";
+        }
+    }
+
+    function addToCart(name, amountGrams, foodInfo) {
+        var vol = (foodInfo && foodInfo.volume) ? Number(foodInfo.volume) : 100;
+        var cal = foodInfo ? Number((Number(foodInfo.calories || 0) / 100 * amountGrams).toFixed(1)) : 0;
+        var carb = foodInfo ? Number((Number(foodInfo.carbs    || 0) / 100 * amountGrams).toFixed(1)) : 0;
+        var prot = foodInfo ? Number((Number(foodInfo.protein  || 0) / 100 * amountGrams).toFixed(1)) : 0;
+        var fat  = foodInfo ? Number((Number(foodInfo.fat      || 0) / 100 * amountGrams).toFixed(1)) : 0;
+        var volML = (vol / 100) * amountGrams;
+        var cat = (foodInfo && foodInfo.category) ? foodInfo.category : "";
+        cart.push({ name: name, amountGrams: amountGrams, calories: cal, carbs: carb, protein: prot, fat: fat, volumeML: volML, volume: vol, category: cat });
+        updateCartBadge();
+        renderCart();
+    }
+
+    function removeFromCart(idx) {
+        cart.splice(idx, 1);
+        updateCartBadge();
+        renderCart();
+    }
+
+    function clearCart() {
+        cart = [];
+        updateCartBadge();
+        renderCart();
+    }
+
+    function renderCart() {
+        var div = document.getElementById("cartList");
+        if (cart.length === 0) {
+            div.innerHTML = "<div class='cart-empty'>ยังไม่มีรายการอาหารครับ<br>กด + เพิ่มอาหารจากผลลัพธ์ หรือเพิ่มด้านบน</div>";
+            return;
+        }
+
+        var totalCal = 0, totalCarb = 0, totalProt = 0, totalFat = 0;
+        var html = "";
+
+        cart.forEach(function(item, idx) {
+            totalCal  += item.calories;
+            totalCarb += item.carbs;
+            totalProt += item.protein;
+            totalFat  += item.fat;
+
+            // bowl ratio เทียบกับ 1 ถ้วยตวง (240ml) เพื่อให้เห็นขนาด
+            var ratio     = item.volumeML / 240;
+            var fillColor = categoryColor(item.category || "");
+
+            html += "<div class='cart-item'>"
+                + "<div class='cart-item-top'>"
+                +   "<div>"
+                +     "<div class='cart-item-name'>" + item.name + "</div>"
+                +     "<div class='cart-item-amount'>" + item.amountGrams.toFixed(1) + " g</div>"
+                +   "</div>"
+                +   "<button class='btn-remove' onclick='removeFromCart(" + idx + ")'>✕ ลบ</button>"
+                + "</div>"
+                + "<div class='cart-item-pills'>"
+                +   "<span class='nutrient-pill highlight'>Cal: <strong>" + item.calories + "</strong> kcal</span>"
+                +   "<span class='nutrient-pill'>Carbs: <strong>" + item.carbs + "</strong> g</span>"
+                +   "<span class='nutrient-pill'>Protein: <strong>" + item.protein + "</strong> g</span>"
+                +   "<span class='nutrient-pill'>Fat: <strong>" + item.fat + "</strong> g</span>"
+                + "</div>"
+                + "<div class='volume-label'>ปริมาตรประมาณ <span class='volume-ratio-badge'>" + item.volumeML.toFixed(0) + " ml</span></div>"
+                + "<div class='bowls-row' id='cart-bowl-" + idx + "'></div>"
+                + "</div>";
+        });
+
+        // สรุปรวม
+        html += "<div class='cart-summary'>"
+            + "<h3>🧮 สรุปสารอาหารรวม</h3>"
+            + "<div class='summary-grid'>"
+            +   "<div class='summary-item'><div class='s-label'>พลังงาน</div><div class='s-value'>" + totalCal.toFixed(1) + " <span class='s-unit'>kcal</span></div></div>"
+            +   "<div class='summary-item'><div class='s-label'>คาร์โบไฮเดรต</div><div class='s-value'>" + totalCarb.toFixed(1) + " <span class='s-unit'>g</span></div></div>"
+            +   "<div class='summary-item'><div class='s-label'>โปรตีน</div><div class='s-value'>" + totalProt.toFixed(1) + " <span class='s-unit'>g</span></div></div>"
+            +   "<div class='summary-item'><div class='s-label'>ไขมัน</div><div class='s-value'>" + totalFat.toFixed(1) + " <span class='s-unit'>g</span></div></div>"
+            + "</div>"
+            + "<button class='btn-clear-cart' onclick='clearCart()'>🗑️ ล้างรายการทั้งหมด</button>"
+            + "</div>";
+
+        div.innerHTML = html;
+
+        // วาดชาม SVG แต่ละ item
+        cart.forEach(function(item, idx) {
+            var ratio     = item.volumeML / 240;
+            var fillColor = categoryColor(item.category || "");
+            var bowlsDiv  = document.getElementById("cart-bowl-" + idx);
+            if (bowlsDiv) {
+                var row = makeBowlsRow(ratio, fillColor);
+                if (row) bowlsDiv.appendChild(row);
+            }
+        });
+    }
+
+    async function addToCartManual() {
+        var name   = document.getElementById("cartFoodName").value.trim();
+        var amount = parseFloat(document.getElementById("cartAmount").value);
+        var unit   = document.getElementById("cartUnit").value;
+        if (!name) { alert("กรุณาระบุชื่ออาหาร"); return; }
+        if (!amount || amount <= 0) { alert("กรุณาระบุปริมาณ"); return; }
+
+        // ดึง food info จาก allFoods cache
+        var foodInfo = (window._allFoods || []).find(function(f) { return f.name === name; });
+
+        var amountInGrams;
+        if (unit === "g") {
+            amountInGrams = amount;
+        } else {
+            var vol = (foodInfo && foodInfo.volume) ? Number(foodInfo.volume) : 100;
+            amountInGrams = (amount * unitToML[unit] / vol) * 100;
+        }
+
+        addToCart(name, amountInGrams, foodInfo);
+        document.getElementById("cartFoodName").value = "";
+        document.getElementById("cartAmount").value = "100";
+    }
+
+    // ─── SVG ชามข้าว ────────────────────────────────────────────────
+    var PX = 10, PT = 4;
+    var BW = 120, BH = 72, BF = 10, BFW = 36;
+    var BOT_L = PX + (BW - BFW) / 2;
+    var BOT_R = PX + (BW + BFW) / 2;
+    var SVG_W = BW + PX * 2;
     var BOWL_PATH = "M " + PX + "," + PT +
         " Q " + (PX - 8) + "," + (PT + BH * 0.58).toFixed(1) + " " + BOT_L + "," + (PT + BH) +
         " L " + BOT_R + "," + (PT + BH) +
         " Q " + (PX + BW + 8) + "," + (PT + BH * 0.58).toFixed(1) + " " + (PX + BW) + "," + PT + " Z";
 
-    // physics: ชามโค้ง — width ที่ระดับ y (จากก้น)
-    // ประมาณ: width(y) = BFW + (BW - BFW) * (y/BH)^0.55
     function bowlWidthAtY(y) {
         return BFW + (BW - BFW) * Math.pow(y / BH, 0.55);
     }
-
     function bowlVolume(hFill) {
         var steps = 200, vol = 0, dy = hFill / steps;
-        for (var i = 0; i < steps; i++) {
-            vol += bowlWidthAtY(i * dy + dy / 2) * dy;
-        }
+        for (var i = 0; i < steps; i++) vol += bowlWidthAtY(i * dy + dy / 2) * dy;
         return vol;
     }
-
     var V_TOTAL = bowlVolume(BH);
-
     function fillHeightFraction(volFrac) {
         if (volFrac <= 0) return 0;
         if (volFrac >= 1) return 1;
-        var target = volFrac * V_TOTAL;
-        var lo = 0, hi = BH, mid;
-        for (var i = 0; i < 50; i++) {
-            mid = (lo + hi) / 2;
-            if (bowlVolume(mid) < target) lo = mid; else hi = mid;
-        }
+        var target = volFrac * V_TOTAL, lo = 0, hi = BH, mid;
+        for (var i = 0; i < 50; i++) { mid = (lo + hi) / 2; if (bowlVolume(mid) < target) lo = mid; else hi = mid; }
         return mid / BH;
     }
-
     function makeBowlSVG(volFrac, fillColor) {
         volFrac = Math.max(0, Math.min(1, volFrac));
-        var hf    = fillHeightFraction(volFrac);
-        var fillH = BH * hf;          // ความสูงอาหารจากก้น
-        var fillY = PT + BH - fillH;   // y ผิวอาหาร
-        var fillW = bowlWidthAtY(fillH);
-        var fillX = (BW - fillW) / 2;
-
+        var hf = fillHeightFraction(volFrac);
+        var fillH = BH * hf, fillY = PT + BH - fillH;
+        var fillW = bowlWidthAtY(fillH), fillX = PX + (BW - fillW) / 2;
         var SVG_H = PT + BH + BF + 4;
         var ns = "http://www.w3.org/2000/svg";
         var svg = document.createElementNS(ns, "svg");
         svg.setAttribute("viewBox", "0 0 " + SVG_W + " " + SVG_H);
-        svg.setAttribute("width",  SVG_W);
-        svg.setAttribute("height", SVG_H);
+        svg.setAttribute("width", SVG_W); svg.setAttribute("height", SVG_H);
         svg.style.display = "block";
-
         function el(tag, attrs) {
             var e = document.createElementNS(ns, tag);
             Object.keys(attrs).forEach(function(k) { e.setAttribute(k, attrs[k]); });
             return e;
         }
-
         var clipId = "bc-" + Math.random().toString(36).slice(2);
-        var defs   = document.createElementNS(ns, "defs");
-        var clip   = document.createElementNS(ns, "clipPath");
+        var defs = document.createElementNS(ns, "defs");
+        var clip = document.createElementNS(ns, "clipPath");
         clip.setAttribute("id", clipId);
-        var clipShape = document.createElementNS(ns, "path");
-        clipShape.setAttribute("d", BOWL_PATH);
-        clip.appendChild(clipShape);
-        defs.appendChild(clip);
-        svg.appendChild(defs);
-
-        // พื้นชาม
+        var cs = document.createElementNS(ns, "path"); cs.setAttribute("d", BOWL_PATH);
+        clip.appendChild(cs); defs.appendChild(clip); svg.appendChild(defs);
         svg.appendChild(el("path", { d: BOWL_PATH, fill: "#e8f5ee", stroke: "none" }));
-
-        // อาหาร
         if (fillH > 0.5) {
-            var water = el("rect", {
-                x: "0", y: fillY.toFixed(2),
-                width: SVG_W, height: (fillH + 2).toFixed(2),
-                fill: fillColor, opacity: "0.85"
-            });
+            var water = el("rect", { x: "0", y: fillY.toFixed(2), width: SVG_W, height: (fillH + 2).toFixed(2), fill: fillColor, opacity: "0.85" });
             water.setAttribute("clip-path", "url(#" + clipId + ")");
             svg.appendChild(water);
-
-            // เส้นผิวอาหาร
-            svg.appendChild(el("line", {
-                x1: fillX.toFixed(1), y1: fillY.toFixed(2),
-                x2: (fillX + fillW).toFixed(1), y2: fillY.toFixed(2),
-                stroke: fillColor, "stroke-width": "1.2", opacity: "0.8"
-            }));
+            svg.appendChild(el("line", { x1: fillX.toFixed(1), y1: fillY.toFixed(2), x2: (fillX + fillW).toFixed(1), y2: fillY.toFixed(2), stroke: fillColor, "stroke-width": "1.2", opacity: "0.8" }));
         }
-
-        // ขอบชาม
-        svg.appendChild(el("path", { d: BOWL_PATH, fill: "none", stroke: "#2d7a4f", "stroke-width": "1.8" }));
-
-        // ฐานชาม
-        svg.appendChild(el("rect", {
-            x: BOT_L, y: (PT + BH),
-            width: BFW, height: BF,
-            rx: "2",
-            fill: volFrac >= 1 ? "#3d9e60" : "#d0ead8",
-            stroke: "#2d7a4f", "stroke-width": "1.5"
-        }));
-
+        svg.appendChild(el("path", { d: BOWL_PATH, fill: "none", stroke: "#1a1a1a", "stroke-width": "1.8" }));
+        svg.appendChild(el("rect", { x: BOT_L, y: (PT + BH), width: BFW, height: BF, rx: "2", fill: "#d0ead8", stroke: "#1a1a1a", "stroke-width": "1.5" }));
         return svg;
+    }
+    function categoryColor(category) {
+        if (!category) return "#4caf78";
+        if (category.indexOf("โปรตีน") >= 0) return "#ef5350";   // แดง
+        if (category.indexOf("คาร์โบ") >= 0) return "#42a5f5";   // น้ำเงิน
+        if (category.indexOf("ไขมัน") >= 0)  return "#ffca28";   // เหลือง
+        return "#4caf78";
     }
 
     function makeBowlsRow(ratio, fillColor) {
         if (!ratio || ratio <= 0) return null;
         var container = document.createElement("div");
         container.className = "bowls-row";
-
-        var full      = Math.floor(ratio);
-        var remainder = ratio - full;
-
-        for (var i = 0; i < full; i++) {
-            container.appendChild(makeBowlSVG(1, fillColor));
-        }
-        if (remainder > 0.02) {
-            container.appendChild(makeBowlSVG(remainder, fillColor));
-        }
-        if (ratio > 0 && ratio < 0.03) {
-            container.appendChild(makeBowlSVG(ratio, fillColor));
-        }
+        var full = Math.floor(ratio), remainder = ratio - full;
+        for (var i = 0; i < full; i++) container.appendChild(makeBowlSVG(1, fillColor));
+        if (remainder > 0.02) container.appendChild(makeBowlSVG(remainder, fillColor));
+        if (ratio > 0 && ratio < 0.03) container.appendChild(makeBowlSVG(ratio, fillColor));
         return container;
     }
 
@@ -427,8 +586,7 @@
         if (unit === "g") return grams.toFixed(1) + " g";
         var mlPerUnit = unitToML[unit];
         var mlTotal   = (volumePer100g / 100) * grams;
-        var val       = mlTotal / mlPerUnit;
-        return parseFloat(val.toFixed(2)) + " " + unitLabel[unit];
+        return parseFloat((mlTotal / mlPerUnit).toFixed(2)) + " " + unitLabel[unit];
     }
 
     function switchTab(tab, btn) {
@@ -441,15 +599,18 @@
     window.onload = async function() { await loadFoodOptions(); };
 
     async function loadFoodOptions() {
-        var dataList = document.getElementById("foodOptions");
         try {
             var res   = await fetch(backend_uri + "/foods");
             var foods = await res.json();
-            dataList.innerHTML = "";
-            foods.forEach(function(food) {
-                var opt = document.createElement("option");
-                opt.value = food.name;
-                dataList.appendChild(opt);
+            window._allFoods = foods;
+            ["foodOptions", "foodOptions2"].forEach(function(id) {
+                var dl = document.getElementById(id);
+                dl.innerHTML = "";
+                foods.forEach(function(food) {
+                    var opt = document.createElement("option");
+                    opt.value = food.name;
+                    dl.appendChild(opt);
+                });
             });
         } catch(e) { console.error("โหลดข้อมูลล้มเหลว:", e); }
     }
@@ -485,6 +646,7 @@
         try {
             var foodsRes = await fetch(backend_uri + "/foods");
             var allFoods = await foodsRes.json();
+            window._allFoods = allFoods;
             var baseInfo = allFoods.find(function(f) { return f.name === foodName; });
 
             var amountInGrams;
@@ -492,8 +654,7 @@
                 amountInGrams = amountRaw;
             } else {
                 var volPer100g = (baseInfo && baseInfo.volume) ? Number(baseInfo.volume) : 100;
-                var mlInput    = amountRaw * unitToML[inputUnit];
-                amountInGrams  = (mlInput / volPer100g) * 100;
+                amountInGrams  = (amountRaw * unitToML[inputUnit] / volPer100g) * 100;
             }
 
             var response = await fetch(backend_uri + "/exchange-food", {
@@ -526,7 +687,6 @@
                 var amountGrams  = Number(item.amount);
                 var ratio        = item.volumeRatio;
                 var points       = item.points || 0;
-
                 var itemFoodInfo = allFoods.find(function(f) { return f.name === item.name; });
                 var itemVol      = (itemFoodInfo && itemFoodInfo.volume) ? Number(itemFoodInfo.volume) : 100;
 
@@ -552,17 +712,20 @@
                 }).join("");
 
                 var ratioLabel = ratio !== null ? ratio.toFixed(2) + "x" : "—";
-                var fillColor  = ratio > 1.5 ? "#ffa726" : ratio < 0.7 ? "#64b5f6" : "#4caf78";
+                var fillColor  = categoryColor((itemFoodInfo && itemFoodInfo.category) ? itemFoodInfo.category : "");
 
                 var itemEl = document.createElement("div");
                 itemEl.className = "exchange-item";
                 itemEl.innerHTML =
                     "<div class='item-top'>"
                     +   "<div class='food-name'>" + item.name + "</div>"
-                    +   "<div class='rate-group'>"
-                    +     "<button class='btn-rate btn-uprate' onclick='rateFood(\"" + item.name.replace(/"/g,'&quot;') + "\", this)'>👍</button>"
-                    +     "<button class='btn-rate btn-disrate' onclick='unrateFood(\"" + item.name.replace(/"/g,'&quot;') + "\", this)'>👎</button>"
-                    +     "<span class='rate-count-mid'>" + points + "</span>"
+                    +   "<div class='item-actions'>"
+                    +     "<div class='rate-group'>"
+                    +       "<button class='btn-rate btn-uprate' onclick='rateFood(\"" + item.name.replace(/"/g,'&quot;') + "\", this)'>👍</button>"
+                    +       "<button class='btn-rate btn-disrate' onclick='unrateFood(\"" + item.name.replace(/"/g,'&quot;') + "\", this)'>👎</button>"
+                    +       "<span class='rate-count-mid'>" + points + "</span>"
+                    +     "</div>"
+                    +     "<button class='btn-add-cart' onclick='addToCartFromResult(\"" + item.name.replace(/"/g,'&quot;') + "\", " + amountGrams + ", this)'>+ ลงรายการ</button>"
                     +   "</div>"
                     + "</div>"
                     + "<div class='amount-badges'>" + badges + "</div>"
@@ -585,17 +748,27 @@
         }
     }
 
+    function addToCartFromResult(name, amountGrams, btn) {
+        var allFoods = window._allFoods || [];
+        var foodInfo = allFoods.find(function(f) { return f.name === name; });
+        addToCart(name, amountGrams, foodInfo);
+        btn.textContent = "✅ เพิ่มแล้ว";
+        btn.classList.add("added");
+        setTimeout(function() {
+            btn.textContent = "+ ลงรายการ";
+            btn.classList.remove("added");
+        }, 1500);
+    }
+
     async function rateFood(foodName, btn) {
         try {
             var res  = await fetch(backend_uri + "/rate-food", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
+                method: "POST", headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ foodName: foodName })
             });
             var data = await res.json();
             if (data.success) {
                 var group = btn.closest(".rate-group");
-                // reset ทุกปุ่มก่อน แล้ว active แค่ปุ่มนี้
                 group.querySelectorAll(".btn-rate").forEach(function(b) { b.classList.remove("rated"); });
                 btn.classList.add("rated");
                 group.querySelector(".rate-count-mid").textContent = data.points;
@@ -606,14 +779,12 @@
     async function unrateFood(foodName, btn) {
         try {
             var res = await fetch(backend_uri + "/unrate-food", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
+                method: "POST", headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ foodName: foodName })
             });
             var data = await res.json();
             if (data.success) {
                 var group = btn.closest(".rate-group");
-                // reset ทุกปุ่มก่อน แล้ว active แค่ปุ่มนี้
                 group.querySelectorAll(".btn-rate").forEach(function(b) { b.classList.remove("rated"); });
                 btn.classList.add("rated");
                 group.querySelector(".rate-count-mid").textContent = data.points;
@@ -647,18 +818,13 @@
         };
         try {
             var response = await fetch(backend_uri + "/add-food", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
+                method: "POST", headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload)
             });
             var data = await response.json();
             if (!response.ok || !data.success) {
-                if (response.status === 401) {
-                    document.getElementById("modalError").style.display = "block";
-                } else {
-                    closeModal();
-                    document.getElementById("addResult").innerHTML = "<p class='error-text'>" + (data.message || "เกิดข้อผิดพลาด") + "</p>";
-                }
+                if (response.status === 401) { document.getElementById("modalError").style.display = "block"; }
+                else { closeModal(); document.getElementById("addResult").innerHTML = "<p class='error-text'>" + (data.message || "เกิดข้อผิดพลาด") + "</p>"; }
                 return;
             }
             closeModal();

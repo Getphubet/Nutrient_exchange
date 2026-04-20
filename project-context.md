@@ -26,9 +26,9 @@
 
 ```
 Nutrient_exchange/
-├── project-context.md   ← ไฟล์นี้
+├── project-context.md
 ├── frontend/
-│   └── index.html       ← หน้าหลัก (plate.html ถูกลบออกแล้ว)
+│   └── index.html
 └── backend/
     ├── server.js
     ├── utils/
@@ -55,16 +55,17 @@ Nutrient_exchange/
 ```json
 { "foodName": "ข้าวขาวหุงสุก", "amount": 100, "nutrientType": "calories" }
 ```
-หมายเหตุ: `amount` เป็นกรัมเสมอ frontend แปลงหน่วยก่อนส่ง
+`amount` เป็นกรัมเสมอ frontend แปลงหน่วยก่อนส่ง
 
 ### /add-food body
 ```json
 {
   "password": "capstoneG24",
-  "name": "ข้าวกล้องหุงสุก",
-  "category": "คาร์โบไฮเดรต",
-  "calories": 152, "carbs": 34, "protein": 2.8, "fat": 0.3,
-  "volume": 163
+  "name": "ไก่อกสุก",
+  "category": "โปรตีน",
+  "sub_category": "ไม่มีไขมัน",
+  "calories": 165, "carbs": 0, "protein": 31, "fat": 3.6,
+  "volume": 100
 }
 ```
 
@@ -89,16 +90,27 @@ ADD_FOOD_PASSWORD=capstoneG24
 
 ```javascript
 {
-  name:     String,   // ชื่ออาหาร
-  category: String,   // คาร์โบไฮเดรต / โปรตีน / ไขมัน
-  calories: Number,   // kcal ต่อ 100g
-  carbs:    Number,   // g ต่อ 100g
-  protein:  Number,   // g ต่อ 100g
-  fat:      Number,   // g ต่อ 100g
-  volume:   Number,   // ml ต่อ 100g (default 100)
-  points:   Number,   // คะแนน rating (default 0)
+  name:         String,   // ชื่ออาหาร
+  category:     String,   // คาร์โบไฮเดรต / โปรตีน / ไขมัน / นม / ผลไม้
+  sub_category: String,   // ดูตารางด้านล่าง (default "-")
+  calories:     Number,   // kcal ต่อ 100g
+  carbs:        Number,   // g ต่อ 100g
+  protein:      Number,   // g ต่อ 100g
+  fat:          Number,   // g ต่อ 100g
+  volume:       Number,   // ml ต่อ 100g (default 100)
+  points:       Number,   // คะแนน rating (default 0)
 }
 ```
+
+### sub_category ที่ใช้
+
+| category | sub_category |
+|----------|-------------|
+| โปรตีน | ไม่มีไขมัน / ไขมันน้อย / ไขมันปานกลาง / ไขมันสูง |
+| นม | ไขมันธรรมดา / พร่องไขมัน / ขาดมันเนย |
+| คาร์โบไฮเดรต, ไขมัน, ผลไม้ | - |
+
+อ้างอิงจาก: รายการอาหารแลกเปลี่ยน โรงพยาบาลธัญญารักษ์ปัตตานี (American Dietetic Association / American Diabetes Association)
 
 ---
 
@@ -112,8 +124,7 @@ baseVolumeML = (baseFood.volume / 100) * amount
 targetVolumeML = (target.volume / 100) * exchangeGrams
 volumeRatio = targetVolumeML / baseVolumeML
 ```
-
-**การเรียงลำดับ:** points มากขึ้นก่อน → ถ้า points เท่ากันเรียงตามชื่อ (localeCompare th)
+เรียงลำดับ: points มากขึ้นก่อน → ถ้าเท่ากันเรียงตามชื่อ (localeCompare th)
 
 ### การแปลงหน่วย (frontend)
 ```
@@ -122,24 +133,43 @@ volumeRatio = targetVolumeML / baseVolumeML
 ทัพพี   = 60 ml
 ถ้วยตวง = 240 ml
 
-// แปลง ml-based unit → กรัม
-mlInput = amountRaw * unitToML[inputUnit]
-amountInGrams = (mlInput / food.volume) * 100
+amountInGrams = (amountRaw * unitToML[unit] / food.volume) * 100
 ```
 
+### Lock nutrient ตาม category
+```javascript
+var ALLOWED_NUTRIENTS = {
+    "คาร์โบไฮเดรต": ["calories", "carbs"],
+    "โปรตีน":        ["calories", "protein"],
+    "ไขมัน":         ["calories", "fat"],
+    "นม":            ["calories"],
+    "ผลไม้":         ["calories"]
+};
+```
+nutrient ที่ไม่อยู่ใน allowed จะ disabled (สีเทา กดไม่ได้)
+
 ### volumeRatio และรูปชาม
-- `volumeRatio` = ปริมาตรของอาหารที่แลกได้ หารด้วย ปริมาตรต้นแบบ
-- แสดงเป็นรูปชามข้าว SVG จำนวนชามตาม ratio เช่น 2.5x = ชามเต็ม 2 + ชามครึ่ง 1
-- ชามทรงปากกว้าง โค้งด้วย quadratic bezier มีฐานสี่เหลี่ยมเตี้ย
-- ขอบชามและฐานสีดำ (`#1a1a1a`)
-- ฐานชามทุกใบสีเขียวอ่อน (`#d0ead8`) เหมือนกันหมด
-- ระดับอาหารในชามใช้ physics จริง (width ไม่ linear ตามความสูง)
-- **สีชามล็อคตาม category:**
-  - 🔵 น้ำเงิน `#42a5f5` → คาร์โบไฮเดรต
-  - 🔴 แดง `#ef5350` → โปรตีน
-  - 🟡 เหลือง `#ffca28` → ไขมัน
-- padding รอบด้าน: `PX=10`, `PT=4` ป้องกันขอบโดนตัด
-- SVG dimensions: `BW=120, BH=72, BF=10, BFW=36, SVG_W=140`
+- แสดงชามข้าว SVG จำนวนตาม ratio (2.5x = ชามเต็ม 2 + ครึ่ง 1)
+- ขอบชามสีดำ (`#1a1a1a`) ฐานสีเขียวอ่อน (`#d0ead8`)
+- ระดับอาหารใช้ physics จริง (width ไม่ linear)
+- padding: `PX=10`, `PT=4`
+- **สีชามตาม category:**
+  - 🔵 `#42a5f5` → คาร์โบไฮเดรต
+  - 🔴 `#ef5350` → โปรตีน
+  - 🟡 `#ffca28` → ไขมัน
+  - 🟣 `#ab47bc` → นม
+  - 🟠 `#ff7043` → ผลไม้
+
+### sub_category tag สี
+| sub_category | class | สี |
+|---|---|---|
+| ไม่มีไขมัน | fat-none | น้ำเงินอ่อน |
+| ไขมันน้อย | fat-low | เขียวอ่อน |
+| ไขมันปานกลาง | fat-mid | ส้ม |
+| ไขมันสูง | fat-high | แดง |
+| ไขมันธรรมดา | milk-full | เหลือง |
+| พร่องไขมัน | milk-low | ม่วงอ่อน |
+| ขาดมันเนย | milk-skim | น้ำเงินเข้ม |
 
 ---
 
@@ -148,47 +178,40 @@ amountInGrams = (mlInput / food.volume) * 100
 ### Tab 1: แลกเปลี่ยนอาหาร
 - datalist ดึงจาก /foods
 - ค่า default: 100 กรัม
-- เลือกปริมาณ + หน่วย (g, ช้อนชา 5ml, ช้อนโต๊ะ 15ml, ทัพพี 60ml, ถ้วยตวง 240ml)
-- เลือก nutrient (calories, carbs, protein, fat)
-- เลือกหน่วยแสดงผลได้หลายหน่วย (default: กรัม)
+- เลือกปริมาณ + หน่วย (g, ช้อนชา, ช้อนโต๊ะ, ทัพพี, ถ้วยตวง)
+- **preview หมวด + tag sub_category** ทันทีที่เลือกอาหาร (ก่อนกดคำนวณ)
+- **lock nutrient dropdown** ตาม category อัตโนมัติ
+- **filter sub_category chips** แสดงเฉพาะโปรตีนและนม
 - แสดงรูปชาม SVG ตาม volumeRatio สีตาม category
-- ปุ่ม 👍 👎 rating พร้อมแสดงคะแนน (toggle กัน)
-- ปุ่ม "+ ลงรายการ" บนแต่ละ exchange item
+- **tag sub_category** บนชื่ออาหารแต่ละอัน
+- ปุ่ม 👍 👎 rating toggle กัน
+- ปุ่ม "+ ลงรายการ"
 
-### Tab 2: รายการอาหาร 🧺 ⚠️ optional — อาจารย์ไม่ได้ขอ
-- เพิ่มอาหารได้ 2 ทาง: กด "+ ลงรายการ" จากผลลัพธ์ หรือเลือกเองใน tab นี้
-- แสดงรายการอาหารที่เพิ่มแล้วพร้อมรูปชาม SVG สีตาม category
-- สรุปยอดรวม calories/carbs/protein/fat ทั้งหมด
-- ลบรายการได้ทีละอัน หรือล้างทั้งหมด
-- เก็บแค่ใน memory (หายเมื่อ refresh)
-- badge แสดงจำนวนรายการบน tab
-- ชามในหน้านี้เทียบกับ 240ml (1 ถ้วยตวง) เป็นหน่วยอ้างอิง
+### Tab 2: รายการอาหาร 🧺 ⚠️ optional
+- เพิ่มอาหาร 2 ทาง: กด "+ ลงรายการ" หรือเลือกเองใน tab
+- สรุป calories/carbs/protein/fat รวม
+- เก็บใน memory เท่านั้น (หายเมื่อ refresh)
 
 ### Tab 3: เพิ่มอาหาร
-- กรอกชื่อ, หมวด, สารอาหาร 4 ตัว, volume (ml/100g)
-- กดเพิ่ม → popup modal ถามรหัสผ่าน
+- dropdown category มี 5 หมวด: คาร์โบไฮเดรต / โปรตีน / ไขมัน / นม / ผลไม้
+- dropdown sub_category จะปรากฏเฉพาะเมื่อเลือกโปรตีนหรือนม
+- กรอก volume (ml/100g)
 
 ---
 
 ## Rating System
-- กด 👍 → POST /rate-food → points +1
-- กด 👎 → POST /unrate-food → points -1 (ติดลบได้ ไม่มีขีดจำกัด)
-- กดปุ่มใดปุ่มหนึ่ง อีกปุ่มจะ reset สีกลับ (toggle)
-- อาหารที่ points มากจะแสดงขึ้นก่อนในผลลัพธ์
+- กด 👍 → +1 point, กด 👎 → -1 point (ติดลบได้)
+- toggle กัน — กดปุ่มใด อีกปุ่มจะ reset
+- points มาก → แสดงก่อน
 
 ---
 
 ## วิธีรัน Local
 ```bash
-# Backend
-cd backend
-node server.js       # localhost:8000
-
-# Frontend
-เปิดผ่าน Live Server ใน VS Code (localhost หรือ 127.0.0.1)
+cd backend && node server.js   # localhost:8000
+# เปิด frontend ผ่าน Live Server ใน VS Code
 ```
 
-### การตรวจสอบ backend_uri (frontend)
 ```javascript
 var _host = window.location.hostname;
 var backend_uri = (_host === "localhost" || _host === "127.0.0.1")
@@ -201,35 +224,34 @@ var backend_uri = (_host === "localhost" || _host === "127.0.0.1")
 ## สิ่งที่ทำแล้ว (April 2026)
 
 ### อาจารย์ขอ
-- เพิ่ม `volume` และ `points` field ใน Food schema
-- แก้ calculator.js คำนวณ volumeRatio และเรียงตาม points
-- เพิ่ม `/rate-food` และ `/unrate-food` endpoint
-- แก้ `/add-food` รับ volume ด้วย
-- ลบ plate.html ออก ไม่ใช้แล้ว
-- เปลี่ยน UI แสดงชาม SVG แทนจาน
-- สีชามล็อคตาม category (น้ำเงิน/แดง/เหลือง)
-- ขอบชามสีดำ ฐานชามสีเขียวอ่อนเหมือนกันทุกใบ
-- ระบบ rating 👍 👎 toggle กัน
+- เพิ่ม `volume`, `points`, `sub_category` field ใน Food schema
+- calculator.js คำนวณ volumeRatio เรียงตาม points
+- `/rate-food`, `/unrate-food`, `/add-food` รับ sub_category
+- ลบ plate.html ออก
+- ชาม SVG สีตาม category ขอบดำ
+- Lock nutrient ตาม category
+- Filter sub_category (โปรตีน 4 แบบ, นม 3 แบบ)
+- Preview tag ก่อนกดคำนวณ
+- หมวดใหม่: นม, ผลไม้
 
-### ทำเพิ่มเป็น optional (อาจารย์ไม่ได้ขอ)
-- **Tab รายการอาหาร 🧺** — ตะกร้าอาหาร เพิ่ม/ลบรายการ สรุป macronutrient รวม เก็บใน memory เท่านั้น
+### Optional (อาจารย์ไม่ได้ขอ)
+- Tab รายการอาหาร 🧺 — ตะกร้า สรุป macronutrient เก็บใน memory
 
 ---
 
 ## แผนงานที่ยังค้างอยู่
-- ทำ Poster A0 (Portrait) สำหรับนำเสนอโปรเจกต์
-- เขียนสคริปต์พรีเซนต์
+- Poster A0 (Portrait)
+- สคริปต์พรีเซนต์
 
 ---
 
 ## หมายเหตุสำหรับ Claude
-- user เป็นนักศึกษา ทำโปรเจกต์ capstone
-- ใช้ภาษาไทยตลอด
-- โปรเจกต์ deploy บน Vercel ทั้ง frontend และ backend
-- backend เป็น Express + MongoDB Atlas
-- frontend เป็น HTML/CSS/JS ล้วน (ไม่มี framework)
-- เวลาแก้โค้ดให้ทำไฟล์ใหม่มาให้เลย user ชอบแบบนั้น
-- plate.html ถูกลบออกแล้ว ไม่มีในโปรเจกต์
-- Tab รายการอาหาร เป็น optional ที่ทำเพิ่มเอง ไม่ใช่ requirement ของอาจารย์
-- window._allFoods เป็น cache ของข้อมูลอาหารทั้งหมดที่ fetch มา ใช้ได้ใน frontend
-- categoryColor() เป็นฟังก์ชันแปลง category string → hex color
+- user เป็นนักศึกษา capstone ใช้ภาษาไทยตลอด
+- backend: Express + MongoDB Atlas, frontend: HTML/CSS/JS ล้วน
+- เวลาแก้โค้ดทำไฟล์ใหม่ให้เลย
+- plate.html ถูกลบแล้ว
+- Tab รายการอาหาร เป็น optional
+- window._allFoods = cache ข้อมูลอาหารทั้งหมด
+- categoryColor() แปลง category → hex
+- subcatTagClass() แปลง sub_category → CSS class
+- ALLOWED_NUTRIENTS กำหนด nutrient ที่ lock ตาม category

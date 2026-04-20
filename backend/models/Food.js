@@ -8,6 +8,14 @@ const FoodSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true
+    // คาร์โบไฮเดรต / โปรตีน / ไขมัน / นม / ผลไม้
+  },
+  sub_category: {
+    type: String,
+    default: "-"
+    // โปรตีน: ไม่มีไขมัน / ไขมันน้อย / ไขมันปานกลาง / ไขมันสูง
+    // นม: ไขมันธรรมดา / พร่องไขมัน / ขาดมันเนย / ไขมันสูง
+    // อื่นๆ: -
   },
   carbs: {
     type: Number,
@@ -25,13 +33,10 @@ const FoodSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  // ปริมาตร (ml) ต่อ 100g — ใช้แปลงหน่วยช้อนชา/ช้อนโต๊ะ/ทัพพี/ถ้วยตวง
-  // ถ้าไม่มีข้อมูล ให้ใช้ค่า default = 100 (สมมติ density = 1 g/ml เหมือนน้ำ)
   volume: {
     type: Number,
     default: 100
   },
-  // คะแนนจาก user กด 👍 — ใช้เรียงอันดับในผลลัพธ์
   points: {
     type: Number,
     default: 0

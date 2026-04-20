@@ -64,14 +64,14 @@ app.post("/exchange-food", async (req, res) => {
       const ratio = Number(result.amount) / 100;
       return {
         ...result,
-        calories: Number((Number(foodDetail.calories || 0) * ratio).toFixed(1)),
-        carbs:    Number((Number(foodDetail.carbs    || 0) * ratio).toFixed(1)),
-        protein:  Number((Number(foodDetail.protein  || 0) * ratio).toFixed(1)),
-        fat:      Number((Number(foodDetail.fat      || 0) * ratio).toFixed(1))
+        calories:     Number((Number(foodDetail.calories     || 0) * ratio).toFixed(1)),
+        carbs:        Number((Number(foodDetail.carbs        || 0) * ratio).toFixed(1)),
+        protein:      Number((Number(foodDetail.protein      || 0) * ratio).toFixed(1)),
+        fat:          Number((Number(foodDetail.fat          || 0) * ratio).toFixed(1)),
+        sub_category: foodDetail.sub_category || "-"
       };
     });
 
-    // ปริมาตรต้นแบบ (ml) — ส่งไปให้ frontend ใช้แสดงผล
     const baseVolumePer100g = Number(baseFood.volume) || 100;
     const baseVolumeML      = (baseVolumePer100g / 100) * amount;
 
@@ -80,6 +80,7 @@ app.post("/exchange-food", async (req, res) => {
       original: {
         name:          baseFood.name,
         category:      baseFood.category,
+        sub_category:  baseFood.sub_category || "-",
         inputAmount:   Number(amount),
         totalNutrient: Number(((baseFood[nutrientType] / 100) * amount).toFixed(2)),
         nutrientType:  nutrientType,
@@ -99,7 +100,7 @@ app.post("/exchange-food", async (req, res) => {
 // ─────────────────────────────────────────
 app.post("/add-food", async (req, res) => {
   try {
-    const { password, name, category, calories, carbs, protein, fat, volume } = req.body;
+    const { password, name, category, sub_category, calories, carbs, protein, fat, volume } = req.body;
 
     if (password !== process.env.ADD_FOOD_PASSWORD) {
       return res.status(401).json({ success: false, message: "รหัสผ่านไม่ถูกต้อง" });
@@ -115,14 +116,15 @@ app.post("/add-food", async (req, res) => {
     }
 
     const newFood = new Food({
-      name:     name.trim(),
-      category: category.trim(),
-      calories: Number(calories) || 0,
-      carbs:    Number(carbs)    || 0,
-      protein:  Number(protein)  || 0,
-      fat:      Number(fat)      || 0,
-      volume:   Number(volume)   || 100,  // default 100 ml/100g ถ้าไม่ได้กรอก
-      points:   0
+      name:         name.trim(),
+      category:     category.trim(),
+      sub_category: sub_category ? sub_category.trim() : "-",
+      calories:     Number(calories) || 0,
+      carbs:        Number(carbs)    || 0,
+      protein:      Number(protein)  || 0,
+      fat:          Number(fat)      || 0,
+      volume:       Number(volume)   || 100,
+      points:       0
     });
 
     await newFood.save();
@@ -135,29 +137,23 @@ app.post("/add-food", async (req, res) => {
 });
 
 // ─────────────────────────────────────────
-// POST /rate-food — กด 👍 +1 คะแนนให้อาหาร
-// body: { "foodName": "ข้าวกล้องหุงสุก" }
+// POST /rate-food — กด 👍 +1 คะแนน
 // ─────────────────────────────────────────
 app.post("/rate-food", async (req, res) => {
   try {
     const { foodName } = req.body;
-
     if (!foodName) {
       return res.status(400).json({ success: false, message: "กรุณาระบุชื่ออาหาร" });
     }
-
     const food = await Food.findOneAndUpdate(
       { name: foodName },
       { $inc: { points: 1 } },
       { new: true }
     );
-
     if (!food) {
       return res.status(404).json({ success: false, message: "ไม่พบอาหารนี้ในฐานข้อมูล" });
     }
-
     res.json({ success: true, foodName: food.name, points: food.points });
-
   } catch (error) {
     console.error("Rate Food Error:", error);
     res.status(500).json({ success: false, message: "เกิดข้อผิดพลาดภายในระบบ" });
@@ -166,28 +162,22 @@ app.post("/rate-food", async (req, res) => {
 
 // ─────────────────────────────────────────
 // POST /unrate-food — กด 👎 -1 คะแนน
-// body: { "foodName": "ข้าวกล้องหุงสุก" }
 // ─────────────────────────────────────────
 app.post("/unrate-food", async (req, res) => {
   try {
     const { foodName } = req.body;
-
     if (!foodName) {
       return res.status(400).json({ success: false, message: "กรุณาระบุชื่ออาหาร" });
     }
-
     const food = await Food.findOneAndUpdate(
       { name: foodName },
       { $inc: { points: -1 } },
       { new: true }
     );
-
     if (!food) {
       return res.status(404).json({ success: false, message: "ไม่พบอาหารนี้ในฐานข้อมูล" });
     }
-
     res.json({ success: true, foodName: food.name, points: food.points });
-
   } catch (error) {
     console.error("Unrate Food Error:", error);
     res.status(500).json({ success: false, message: "เกิดข้อผิดพลาดภายในระบบ" });

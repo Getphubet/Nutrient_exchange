@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบแลกเปลี่ยนอาหาร</title>
+    <title>ระบบเปรียบเทียบอาหาร</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Prompt:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -233,19 +233,32 @@
         .btn-cancel { background: #f4f4f4; color: var(--text-mid); }
         .btn-cancel:hover { background: #e8e8e8; }
         .modal-error { font-size: 12px; color: #c0392b; margin-bottom: 8px; display: none; }
+        .guide-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 200; align-items: center; justify-content: center; }
+        .guide-overlay.show { display: flex; }
+        .guide-modal { background: white; border-radius: 20px; padding: 28px 32px; width: 100%; max-width: 480px; max-height: 80vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+        .guide-modal h2 { font-family: 'Prompt', sans-serif; font-size: 18px; font-weight: 600; color: var(--green-dark); margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .guide-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-light); line-height: 1; }
+        .guide-close:hover { color: var(--text-dark); }
+        .guide-section { margin-bottom: 20px; }
+        .guide-section h3 { font-size: 14px; font-weight: 600; color: var(--green-dark); margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+        .guide-step { display: flex; gap: 10px; margin-bottom: 8px; align-items: flex-start; }
+        .guide-num { width: 22px; height: 22px; border-radius: 50%; background: var(--green-mid); color: white; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+        .guide-text { font-size: 13px; color: var(--text-mid); line-height: 1.6; }
+        .guide-note { background: var(--green-pale); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; font-size: 12px; color: var(--text-mid); }
     </style>
 </head>
 <body>
 <div class="card">
     <div class="header">
         <div class="header-icon">&#128260;</div>
-        <div>
-            <h1>ระบบอาหารสุขภาพ</h1>
+        <div style="flex:1">
+            <h1>ระบบเปรียบเทียบอาหาร</h1>
             <p>คำนวณและจัดการข้อมูลสารอาหาร</p>
         </div>
+        <button onclick="openGuide()" style="border-radius:20px;border:1.5px solid var(--border);background:white;color:var(--green-dark);font-size:12px;font-weight:600;cursor:pointer;padding:5px 12px;flex-shrink:0">วิธีใช้</button>
     </div>
     <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('exchange', this)">🔄 แลกเปลี่ยน</button>
+        <button class="tab-btn active" onclick="switchTab('exchange', this)">🔄 เปรียบเทียบอาหาร</button>
         <button class="tab-btn" onclick="switchTab('cart', this)">🧺 รายการ<span class="cart-badge" id="cartBadge" style="display:none">0</span></button>
         <button class="tab-btn" onclick="switchTab('add', this)">➕ เพิ่มอาหาร</button>
     </div>
@@ -371,6 +384,45 @@
         <div class="divider"></div>
         <button class="btn-calculate" onclick="openPasswordModal()">➕ เพิ่มอาหารลงฐานข้อมูล</button>
         <div id="addResult" style="margin-top:16px"></div>
+    </div>
+</div>
+
+<div class="guide-overlay" id="guideOverlay">
+    <div class="guide-modal">
+        <h2>คู่มือการใช้งาน <button class="guide-close" onclick="closeGuide()">✕</button></h2>
+
+        <div class="guide-section">
+            <h3>🔄 เปรียบเทียบอาหาร</h3>
+            <div class="guide-step"><div class="guide-num">1</div><div class="guide-text">พิมพ์หรือเลือกชื่ออาหารต้นแบบ ระบบจะแสดงหมวดหมู่และประเภทย่อยให้อัตโนมัติ</div></div>
+            <div class="guide-step"><div class="guide-num">2</div><div class="guide-text">กรอกปริมาณและเลือกหน่วย (กรัม, ช้อนชา, ช้อนโต๊ะ, ทัพพี, ถ้วยตวง)</div></div>
+            <div class="guide-step"><div class="guide-num">3</div><div class="guide-text">เลือกสารอาหารที่ต้องการแลกเปลี่ยน ระบบจะล็อคเฉพาะตัวเลือกที่เหมาะสมกับหมวดหมู่นั้น</div></div>
+            <div class="guide-step"><div class="guide-num">4</div><div class="guide-text">กรองประเภทย่อย (เฉพาะโปรตีนและนม) หากต้องการดูเฉพาะบางประเภท</div></div>
+            <div class="guide-step"><div class="guide-num">5</div><div class="guide-text">กดคำนวณ ผลลัพธ์จะแสดงอาหารที่แลกได้พร้อมรูปชามแสดงปริมาตรเปรียบเทียบ</div></div>
+        </div>
+
+        <div class="guide-section">
+            <h3>🧺 รายการอาหาร</h3>
+            <div class="guide-step"><div class="guide-num">1</div><div class="guide-text">กด "+ ลงรายการ" บนผลลัพธ์ที่ต้องการ หรือเพิ่มอาหารเองในหน้ารายการ</div></div>
+            <div class="guide-step"><div class="guide-num">2</div><div class="guide-text">ระบบจะสรุปพลังงานและสารอาหารรวมทั้งหมดให้อัตโนมัติ</div></div>
+            <div class="guide-note">⚠️ ข้อมูลในรายการจะหายเมื่อปิดหน้าเว็บ</div>
+        </div>
+
+        <div class="guide-section">
+            <h3>👍 การให้คะแนน</h3>
+            <div class="guide-step"><div class="guide-num">1</div><div class="guide-text">กด 👍 หรือ 👎 บนอาหารที่ต้องการเพื่อให้คะแนน</div></div>
+            <div class="guide-step"><div class="guide-num">2</div><div class="guide-text">อาหารที่มีคะแนนสูงจะแสดงขึ้นมาก่อนในผลลัพธ์</div></div>
+        </div>
+
+        <div class="guide-section">
+            <h3>🎨 สีชาม</h3>
+            <div class="guide-note">
+                🔵 น้ำเงิน = คาร์โบไฮเดรต &nbsp;|&nbsp;
+                🔴 แดง = โปรตีน &nbsp;|&nbsp;
+                🟡 เหลือง = ไขมัน &nbsp;|&nbsp;
+                🟣 ม่วง = นม &nbsp;|&nbsp;
+                🟠 ส้ม = ผลไม้
+            </div>
+        </div>
     </div>
 </div>
 
@@ -952,6 +1004,12 @@
 
     document.getElementById("modalOverlay").addEventListener("click", function(e) {
         if (e.target === this) closeModal();
+    });
+
+    function openGuide() { document.getElementById("guideOverlay").classList.add("show"); }
+    function closeGuide() { document.getElementById("guideOverlay").classList.remove("show"); }
+    document.getElementById("guideOverlay").addEventListener("click", function(e) {
+        if (e.target === this) closeGuide();
     });
 </script>
 </body>

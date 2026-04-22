@@ -1,5 +1,5 @@
 # project-context.md
-## ระบบแลกเปลี่ยนอาหาร (Nutrient Exchange System)
+## ระบบเปรียบเทียบอาหาร (Food Comparison System)
 *อัปเดตล่าสุด: April 2026*
 
 ---
@@ -19,6 +19,7 @@
 | ชื่อ | ค่า |
 |------|-----|
 | ADD_FOOD_PASSWORD | capstoneG24 |
+| Google Form (แบบสอบถาม) | https://docs.google.com/forms/d/e/1FAIpQLScek6hJK_Vx4P_D42oMKwHEgINxvNV6oV4i5mJtjZ0I1AiUew/viewform |
 
 ---
 
@@ -69,11 +70,6 @@ Nutrient_exchange/
 }
 ```
 
-### /rate-food และ /unrate-food body
-```json
-{ "foodName": "ข้าวขาวหุงสุก" }
-```
-
 ---
 
 ## .env (backend)
@@ -110,7 +106,7 @@ ADD_FOOD_PASSWORD=capstoneG24
 | นม | ไขมันธรรมดา / พร่องไขมัน / ขาดมันเนย |
 | คาร์โบไฮเดรต, ไขมัน, ผลไม้ | - |
 
-อ้างอิงจาก: รายการอาหารแลกเปลี่ยน โรงพยาบาลธัญญารักษ์ปัตตานี (American Dietetic Association / American Diabetes Association)
+อ้างอิงจาก: รายการอาหารแลกเปลี่ยน โรงพยาบาลธัญญารักษ์ปัตตานี
 
 ---
 
@@ -126,16 +122,6 @@ volumeRatio = targetVolumeML / baseVolumeML
 ```
 เรียงลำดับ: points มากขึ้นก่อน → ถ้าเท่ากันเรียงตามชื่อ (localeCompare th)
 
-### การแปลงหน่วย (frontend)
-```
-ช้อนชา  = 5 ml
-ช้อนโต๊ะ = 15 ml
-ทัพพี   = 60 ml
-ถ้วยตวง = 240 ml
-
-amountInGrams = (amountRaw * unitToML[unit] / food.volume) * 100
-```
-
 ### Lock nutrient ตาม category
 ```javascript
 var ALLOWED_NUTRIENTS = {
@@ -146,62 +132,59 @@ var ALLOWED_NUTRIENTS = {
     "ผลไม้":         ["calories"]
 };
 ```
-nutrient ที่ไม่อยู่ใน allowed จะ disabled (สีเทา กดไม่ได้)
 
-### volumeRatio และรูปชาม
-- แสดงชามข้าว SVG จำนวนตาม ratio (2.5x = ชามเต็ม 2 + ครึ่ง 1)
-- ขอบชามสีดำ (`#1a1a1a`) ฐานสีเขียวอ่อน (`#d0ead8`)
-- ระดับอาหารใช้ physics จริง (width ไม่ linear)
-- padding: `PX=10`, `PT=4`
-- **สีชามตาม category:**
-  - 🔵 `#42a5f5` → คาร์โบไฮเดรต
-  - 🔴 `#ef5350` → โปรตีน
-  - 🟡 `#ffca28` → ไขมัน
-  - 🟣 `#ab47bc` → นม
-  - 🟠 `#ff7043` → ผลไม้
+### สีชามตาม category
+- 🔵 `#42a5f5` → คาร์โบไฮเดรต
+- 🔴 `#ef5350` → โปรตีน
+- 🟡 `#ffca28` → ไขมัน
+- 🟣 `#ab47bc` → นม
+- 🟠 `#ff7043` → ผลไม้
 
 ### sub_category tag สี
-| sub_category | class | สี |
-|---|---|---|
-| ไม่มีไขมัน | fat-none | น้ำเงินอ่อน |
-| ไขมันน้อย | fat-low | เขียวอ่อน |
-| ไขมันปานกลาง | fat-mid | ส้ม |
-| ไขมันสูง | fat-high | แดง |
-| ไขมันธรรมดา | milk-full | เหลือง |
-| พร่องไขมัน | milk-low | ม่วงอ่อน |
-| ขาดมันเนย | milk-skim | น้ำเงินเข้ม |
+| sub_category | class |
+|---|---|
+| ไม่มีไขมัน | fat-none (น้ำเงินอ่อน) |
+| ไขมันน้อย | fat-low (เขียวอ่อน) |
+| ไขมันปานกลาง | fat-mid (ส้ม) |
+| ไขมันสูง | fat-high (แดง) |
+| ไขมันธรรมดา | milk-full (เหลือง) |
+| พร่องไขมัน | milk-low (ม่วงอ่อน) |
+| ขาดมันเนย | milk-skim (น้ำเงินเข้ม) |
 
 ---
 
 ## Features ใน index.html
 
-### Tab 1: แลกเปลี่ยนอาหาร
-- datalist ดึงจาก /foods
+### Tab 1: เปรียบเทียบอาหาร
 - ค่า default: 100 กรัม
-- เลือกปริมาณ + หน่วย (g, ช้อนชา, ช้อนโต๊ะ, ทัพพี, ถ้วยตวง)
-- **preview หมวด + tag sub_category** ทันทีที่เลือกอาหาร (ก่อนกดคำนวณ)
-- **lock nutrient dropdown** ตาม category อัตโนมัติ
-- **filter sub_category chips** แสดงเฉพาะโปรตีนและนม
-- แสดงรูปชาม SVG ตาม volumeRatio สีตาม category
-- **tag sub_category** บนชื่ออาหารแต่ละอัน
+- preview หมวด + tag sub_category ทันทีที่เลือกอาหาร
+- lock nutrient dropdown ตาม category อัตโนมัติ
+- filter sub_category chips (โปรตีน 4 แบบ, นม 3 แบบ)
+- แสดงชาม SVG สีตาม category
+- tag sub_category บนชื่ออาหาร
 - ปุ่ม 👍 👎 rating toggle กัน
 - ปุ่ม "+ ลงรายการ"
 
 ### Tab 2: รายการอาหาร 🧺 ⚠️ optional
-- เพิ่มอาหาร 2 ทาง: กด "+ ลงรายการ" หรือเลือกเองใน tab
+- เพิ่มอาหาร 2 ทาง
 - สรุป calories/carbs/protein/fat รวม
 - เก็บใน memory เท่านั้น (หายเมื่อ refresh)
 
 ### Tab 3: เพิ่มอาหาร
-- dropdown category มี 5 หมวด: คาร์โบไฮเดรต / โปรตีน / ไขมัน / นม / ผลไม้
-- dropdown sub_category จะปรากฏเฉพาะเมื่อเลือกโปรตีนหรือนม
+- dropdown category 5 หมวด
+- dropdown sub_category เฉพาะโปรตีนและนม
 - กรอก volume (ml/100g)
+
+### ปุ่ม "วิธีใช้" (header)
+- popup modal คู่มือการใช้งาน
+- กด ✕ หรือคลิกนอก popup ปิดได้
+- อธิบายการใช้งานทุก tab, สีชาม, ระบบคะแนน
 
 ---
 
 ## Rating System
-- กด 👍 → +1 point, กด 👎 → -1 point (ติดลบได้)
-- toggle กัน — กดปุ่มใด อีกปุ่มจะ reset
+- กด 👍 → +1, กด 👎 → -1 (ติดลบได้)
+- toggle กัน
 - points มาก → แสดงก่อน
 
 ---
@@ -224,15 +207,17 @@ var backend_uri = (_host === "localhost" || _host === "127.0.0.1")
 ## สิ่งที่ทำแล้ว (April 2026)
 
 ### อาจารย์ขอ
-- เพิ่ม `volume`, `points`, `sub_category` field ใน Food schema
+- เพิ่ม volume, points, sub_category field
 - calculator.js คำนวณ volumeRatio เรียงตาม points
-- `/rate-food`, `/unrate-food`, `/add-food` รับ sub_category
-- ลบ plate.html ออก
+- /rate-food, /unrate-food, /add-food รับ sub_category
+- ลบ plate.html
 - ชาม SVG สีตาม category ขอบดำ
 - Lock nutrient ตาม category
-- Filter sub_category (โปรตีน 4 แบบ, นม 3 แบบ)
+- Filter sub_category (โปรตีน 4, นม 3)
 - Preview tag ก่อนกดคำนวณ
 - หมวดใหม่: นม, ผลไม้
+- เปลี่ยนชื่อเป็น "ระบบเปรียบเทียบอาหาร"
+- เพิ่มปุ่ม "วิธีใช้" popup คู่มือ
 
 ### Optional (อาจารย์ไม่ได้ขอ)
 - Tab รายการอาหาร 🧺 — ตะกร้า สรุป macronutrient เก็บใน memory
@@ -255,3 +240,4 @@ var backend_uri = (_host === "localhost" || _host === "127.0.0.1")
 - categoryColor() แปลง category → hex
 - subcatTagClass() แปลง sub_category → CSS class
 - ALLOWED_NUTRIENTS กำหนด nutrient ที่ lock ตาม category
+- ชื่อเว็บ = "ระบบเปรียบเทียบอาหาร" (เปลี่ยนจาก "ระบบแลกเปลี่ยนอาหาร")

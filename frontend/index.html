@@ -267,7 +267,7 @@
     <div id="tab-exchange" class="tab-content active">
         <div class="field">
             <label>อาหารต้นแบบ</label>
-            <input list="foodOptions" id="foodName" class="input-base" placeholder="พิมพ์หรือเลือกชื่ออาหาร..." autocomplete="off" oninput="onFoodNameChange()">
+            <input list="foodOptions" id="foodName" class="input-base" placeholder="อาหารหรือวัตถุดิบที่ต้องการเปรียบเทียบ" autocomplete="off" oninput="onFoodNameChange()">
             <datalist id="foodOptions"></datalist>
             <div id="foodPreview" style="margin-top:8px;min-height:20px"></div>
         </div>
@@ -393,16 +393,16 @@
 
         <div class="guide-section">
             <h3>🔄 เปรียบเทียบอาหาร</h3>
-            <div class="guide-step"><div class="guide-num">1</div><div class="guide-text">พิมพ์หรือเลือกชื่ออาหารต้นแบบ ระบบจะแสดงหมวดหมู่และประเภทย่อยให้อัตโนมัติ</div></div>
+            <div class="guide-step"><div class="guide-num">1</div><div class="guide-text">พิมพ์หรือเลือกชื่ออาหาร/วัตถุดิบที่ต้องการเปรียบเทียบ ระบบจะแสดงหมวดหมู่ให้อัตโนมัติ</div></div>
             <div class="guide-step"><div class="guide-num">2</div><div class="guide-text">กรอกปริมาณและเลือกหน่วย (กรัม, ช้อนชา, ช้อนโต๊ะ, ทัพพี, ถ้วยตวง)</div></div>
-            <div class="guide-step"><div class="guide-num">3</div><div class="guide-text">เลือกสารอาหารที่ต้องการแลกเปลี่ยน ระบบจะล็อคเฉพาะตัวเลือกที่เหมาะสมกับหมวดหมู่นั้น</div></div>
-            <div class="guide-step"><div class="guide-num">4</div><div class="guide-text">กรองประเภทย่อย (เฉพาะโปรตีนและนม) หากต้องการดูเฉพาะบางประเภท</div></div>
-            <div class="guide-step"><div class="guide-num">5</div><div class="guide-text">กดคำนวณ ผลลัพธ์จะแสดงอาหารที่แลกได้พร้อมรูปชามแสดงปริมาตรเปรียบเทียบ</div></div>
+            <div class="guide-step"><div class="guide-num">3</div><div class="guide-text">เลือกสารอาหารที่ต้องการแลกเปลี่ยน ระบบจะแสดงเฉพาะตัวเลือกที่อยู่ในหมวดหมู่เดียวกัน</div></div>
+            <div class="guide-step"><div class="guide-num">4</div><div class="guide-text">เลือกแสดงหมวดหมู่ย่อย (เฉพาะโปรตีนและนม) หากต้องการดูเฉพาะบางหมวดหมู่ย่อย</div></div>
+            <div class="guide-step"><div class="guide-num">5</div><div class="guide-text">กดคำนวณ ผลลัพธ์จะแสดงอาหารที่แลกเปลี่ยนได้พร้อมรูปชามแสดงปริมาตรเปรียบเทียบ</div></div>
         </div>
 
         <div class="guide-section">
             <h3>🧺 รายการอาหาร</h3>
-            <div class="guide-step"><div class="guide-num">1</div><div class="guide-text">กด "+ ลงรายการ" บนผลลัพธ์ที่ต้องการ หรือเพิ่มอาหารเองในหน้ารายการ</div></div>
+            <div class="guide-step"><div class="guide-num">1</div><div class="guide-text">กด "+ ลงรายการ" บนผลลัพธ์ที่ต้องการเลือก หรือเพิ่มอาหารเองในหน้ารายการ</div></div>
             <div class="guide-step"><div class="guide-num">2</div><div class="guide-text">ระบบจะสรุปพลังงานและสารอาหารรวมทั้งหมดให้อัตโนมัติ</div></div>
             <div class="guide-note">⚠️ ข้อมูลในรายการจะหายเมื่อปิดหน้าเว็บ</div>
         </div>
@@ -416,7 +416,7 @@
         <div class="guide-section">
             <h3>🎨 สีชาม</h3>
             <div class="guide-note">
-                🔵 น้ำเงิน = คาร์โบไฮเดรต &nbsp;|&nbsp;
+                🔵 น้ำเงิน = ข้าว-แป้ง &nbsp;|&nbsp;
                 🔴 แดง = โปรตีน &nbsp;|&nbsp;
                 🟡 เหลือง = ไขมัน &nbsp;|&nbsp;
                 🟣 ม่วง = นม &nbsp;|&nbsp;
